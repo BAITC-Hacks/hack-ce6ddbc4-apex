@@ -5,6 +5,8 @@ import secrets
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
+from matcher.scoring import WEIGHTS
+
 from .config import settings
 from .i18n import HTML_LANG, SUPPORTED, data_label, get_lang, translate
 
@@ -16,6 +18,7 @@ def format_kzt(value: int) -> str:
 
 
 templates.env.filters["kzt"] = format_kzt
+templates.env.globals["SCORE_WEIGHTS"] = WEIGHTS   # фаза 5: раскрывашка балла в карточке
 
 
 def ensure_csrf(request: Request) -> str:

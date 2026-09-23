@@ -1,0 +1,12 @@
+{# Фаза 5 → вставить в app/search.html (фаза 4) после баннера статуса одной строкой:
+     {% include "partials/search_extras.html" %}
+   resp — SearchResponse; если в фазе 4 переменная называется иначе: {% set resp = <имя> %} перед include. #}
+<link rel="stylesheet" href="/static/css/explain.css">
+{% if resp and resp.status != 'invalid_request' %}
+  <p class="compare-link"><a class="btn btn--ghost" href="/app/compare?{{ dict(request.query_params) | urlencode }}">{{ t('compare.button') }}</a></p>
+{% endif %}
+{% if resp %}
+  {% include "partials/why_not.html" %}
+  {% include "partials/hints.html" %}
+  {% if resp.meta.llm_used %}<p class="muted">{{ t('badge.llm_edited') }}</p>{% endif %}
+{% endif %}

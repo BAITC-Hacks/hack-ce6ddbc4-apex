@@ -1,0 +1,64 @@
+/* Фаза 5: объяснения, «почему не больше», подсказки, сравнение дат.
+   Отдельный файл, чтобы не конфликтовать с правками app.css других фаз. Палитра — дизайнбук Tandau. */
+:root {
+  --p5-ink: #000; --p5-paper: #fff; --p5-panel: #f5f5f5; --p5-muted: #525252; --p5-line: #e5e5e5;
+  --p5-blue: #2b5fe3; --p5-ok: #15803d; --p5-ok-bg: #ecfdf3; --p5-bad: #b42318; --p5-bad-bg: #fef3f2;
+  --p5-warn: #9a5b00; --p5-warn-bg: #fffaeb; --p5-info-bg: #eef3fe;
+}
+.compare-page { padding: 32px 16px 64px; }
+.compare-page__inner { max-width: 1200px; margin: 0 auto; }
+.compare-back a { color: var(--p5-ink); }
+.compare-page__title { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.03em; margin: 12px 0 8px; }
+.compare-page__lead { color: var(--p5-muted); margin: 0 0 24px; max-width: 60ch; }
+.compare-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: end; margin: 0 0 24px; }
+.compare-form input[type="date"] { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid #737373; border-radius: 4px; font: inherit; background: var(--p5-paper); }
+.compare-form input:focus-visible { outline: 2px solid var(--p5-blue); outline-offset: 2px; }
+.compare-summary { font-weight: 600; padding: 12px 16px; background: var(--p5-panel); border-left: 4px solid var(--p5-blue); margin: 0 0 24px; }
+.compare-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+.compare-col { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.compare-col__title { font-size: 20px; margin: 0; position: sticky; top: 64px; z-index: 1; background: var(--p5-paper); padding: 8px 0; }
+
+.p5-banner { display: flex; gap: 10px; align-items: flex-start; margin: 0; padding: 12px 16px; background: var(--p5-panel); border-left: 4px solid var(--p5-muted); }
+.p5-banner--found { border-left-color: var(--p5-ok); }
+.p5-banner--partial, .p5-banner--none { border-left-color: var(--p5-warn); }
+.p5-banner--invalid, .p5-banner--nocat { border-left-color: var(--p5-blue); }
+.p5-banner__icon { font-weight: 700; min-width: 1em; }
+
+.result-card { background: var(--p5-paper); border: 1px solid var(--p5-line); padding: 20px; min-width: 0; }
+.result-card--entered { border-left: 4px solid var(--p5-ok); }
+.result-card--left { border-left: 4px solid var(--p5-bad); }
+.result-card--stayed { border-left: 4px solid var(--p5-blue); }
+.result-card__name { margin: 0; font-size: 20px; letter-spacing: -.02em; }
+.result-card__meta { margin: 4px 0 0; color: var(--p5-muted); font-size: 14px; }
+.result-card__price { margin: 8px 0 0; font-weight: 600; }
+.result-card__badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.result-card__text { margin: 12px 0 0; line-height: 1.55; overflow-wrap: anywhere; }
+.p5-badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 12px; font-weight: 600; background: var(--p5-panel); color: var(--p5-muted); }
+.p5-badge--entered { background: var(--p5-ok-bg); color: var(--p5-ok); }
+.p5-badge--left { background: var(--p5-bad-bg); color: var(--p5-bad); }
+.p5-badge--stayed { background: var(--p5-info-bg); color: var(--p5-blue); }
+
+.score { margin-top: 12px; border-top: 1px dashed var(--p5-line); padding-top: 8px; font-size: 14px; }
+.score summary { cursor: pointer; color: var(--p5-muted); font-weight: 600; }
+.score summary:focus-visible { outline: 2px solid var(--p5-blue); outline-offset: 2px; }
+.score__table { width: 100%; border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.score__table th, .score__table td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--p5-line); }
+.score__table th[scope="row"], .score__table thead th:first-child { text-align: left; font-weight: 500; }
+.score__note { font-size: 12px; margin: 8px 0 0; color: var(--p5-muted); }
+
+.why, .hints { margin-top: 24px; }
+.why__title, .hints__title { font-size: 18px; margin: 0 0 12px; }
+.why__list, .hints__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.why__item, .hints__item { padding: 12px; background: var(--p5-panel); overflow-wrap: anywhere; }
+.why__tag { display: inline-block; margin-right: 8px; padding: 1px 8px; border-radius: 2px; font-size: 12px; font-weight: 700; background: var(--p5-paper); color: var(--p5-muted); }
+.why__item--busy .why__tag { background: var(--p5-warn-bg); color: var(--p5-warn); }
+.why__item--budget .why__tag { background: var(--p5-bad-bg); color: var(--p5-bad); }
+.why__item--rank .why__tag { background: var(--p5-info-bg); color: var(--p5-blue); }
+.hints__item { border-left: 4px solid var(--p5-blue); }
+.hints__item a { color: var(--p5-ink); }
+.compare-link { margin: 16px 0; }
+
+@media (max-width: 720px) {
+  .compare-form, .compare-grid { grid-template-columns: 1fr; }
+  .score__table { font-size: 13px; }
+}

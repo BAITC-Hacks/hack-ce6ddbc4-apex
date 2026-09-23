@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Tandau — {{ t('compare.title') }}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/explain.css">
+<section class="compare-page"><div class="compare-page__inner">
+  <p class="compare-back"><a href="/app?{{ dict(hidden, date=date_a) | urlencode }}">{{ t('compare.back') }}</a></p>
+  <h1 class="compare-page__title">{{ t('compare.title') }}</h1>
+  <p class="compare-page__lead">{{ t('compare.lead') }}</p>
+
+  <form class="compare-form" method="get" action="/app/compare">
+    {% for k, v in hidden.items() %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endfor %}
+    <div class="field"><label for="date_a">{{ t('compare.date_a') }}</label>
+      <input id="date_a" name="date_a" type="date" value="{{ date_a }}" min="{{ window[0] }}" max="{{ window[1] }}" required></div>
+    <div class="field"><label for="date_b">{{ t('compare.date_b') }}</label>
+      <input id="date_b" name="date_b" type="date" value="{{ date_b }}" min="{{ window[0] }}" max="{{ window[1] }}" required></div>
+    <div class="field compare-form__submit"><button class="btn" type="submit">{{ t('compare.submit') }}</button></div>
+  </form>
+
+  {% if error %}
+    <p class="p5-banner p5-banner--invalid" role="status"><span class="p5-banner__icon" aria-hidden="true">i</span>{{ t(error) }}</p>
+  {% elif result %}
+    {% set d = result.diff %}
+    <p class="compare-summary" role="status">{{ t('compare.summary',
+        entered=(d.entered | map(attribute='name') | join(', ')) or t('compare.nobody'),
+        left=(d.left | map(attribute='name') | join(', ')) or t('compare.nobody'),
+        stayed=(d.stayed | map(attribute='name') | join(', ')) or t('compare.nobody')) }}</p>
+    <div class="compare-grid">
+      {% for side, day in [('a', date_a), ('b', date_b)] %}
+      {% set resp = result[side] %}
+      <section class="compare-col" aria-labelledby="col-{{ side }}">
+        <h2 class="compare-col__title" id="col-{{ side }}">{{ t('compare.column', date=short_date(day)) }}</h2>
+        <p class="p5-banner p5-banner--{{ {'found':'found','partial':'partial','no_category_in_city':'nocat','none_match':'none','invalid_request':'invalid'}[resp.status] }}">
+          <span class="p5-banner__icon" aria-hidden="true">{{ {'found':'✓','partial':'!','none_match':'!'}.get(resp.status, 'i') }}</span>{{ resp.summary }}</p>
+        {% for card in resp.cards %}{% include "partials/result_card.html" %}{% endfor %}
+        {% include "partials/why_not.html" %}
+      </section>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div></section>
+{% endblock %}

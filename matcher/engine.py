@@ -6,10 +6,12 @@ from collections import Counter
 from typing import Iterable
 
 from .data import CITIES, WINDOW_END, WINDOW_START, Catalog
-from .explain import Translator, badges_for, explain_cards, fmt_date, fmt_kzt, format_plural, join_human, label
+from .explain import (Translator, explain_cards, fmt_date, fmt_kzt, format_plural, join_human, label,
+                      why_not_more)                                            # [P5] explain v2
 from .filters import check, details
+from .hints import build_hints                                                  # [P5]
 from .models import MAX_CARDS, REASON_ORDER, Card, Rejection, SearchRequest, SearchResponse
-from .scoring import SCORING_VERSION, WEIGHTS, score, sort_key
+from .scoring import SCORING_VERSION, WEIGHTS, build_context, rank              # [P5] scoring v2
 from .validation import validate
 
 ENGINE_VERSION = "1.0"
@@ -55,21 +57,23 @@ def recommend(catalog: Catalog, req: SearchRequest, tr: Translator) -> SearchRes
     passed = [c for c in pool if not reasons[c.id]]
     rejected = [Rejection(c.id, c.name, reasons[c.id], details(c, req, reasons[c.id]))
                 for c in pool if reasons[c.id]]
-    breakdowns = {c.id: score(c, req) for c in passed}
-    ranked = sorted(passed, key=lambda c: sort_key(c, breakdowns[c.id]))
+    score_ctx = build_context(catalog, req, passed)                     # [P5] факты, TF-IDF relevance
+    ranked = rank(passed, req, score_ctx)                                # [P5] скоринг v2, (-score, price, id)
     top = ranked[:MAX_CARDS]
-    more = len(ranked) - len(top)
+    lower = [c for c, _ in ranked[MAX_CARDS:]]
+    more = len(lower)
     status = "found" if len(passed) >= MAX_CARDS else ("partial" if passed else "none_match")
     return SearchResponse(
         status=status,
         summary=_summary(status, tr, ctx, total_city=len(pool), passed=len(passed), more=more, rejected=rejected),
-        cards=_cards(top, req, breakdowns, tr),
+        cards=explain_cards(top, req, score_ctx, tr),                    # [P5] контрастные объяснения
         more_count=more,
         rejected=rejected,
         reason_counts=_count(r.reasons for r in rejected),               # по ВСЕМ причинам
         funnel=funnel,
-        hints=[],                                                        # фаза 5: hints.py
+        hints=build_hints(catalog, req, status, len(passed), tr),        # [P5]
         meta=_meta(req, primary_counts=_count([r.primary] for r in rejected)),
+        why_not=why_not_more(catalog, req, rejected, lower, tr),         # [P5]
     )
 
 
@@ -140,14 +144,6 @@ def _summary(status: str, tr: Translator, ctx: dict, *, total_city: int, passed:
     return tr(key, head=head, reasons="; ".join(parts))
 
 
-def _cards(top, req: SearchRequest, breakdowns: dict, tr: Translator) -> list[Card]:
-    explained = explain_cards(top, req, [breakdowns[c.id].total for c in top], tr)
-    return [
-        Card(id=c.id, name=c.name, category=req.category, city=c.city, price_from_kzt=c.price_from_kzt,
-             badges=badges_for(c, req), explanation=text, atoms=atoms,
-             score=round(breakdowns[c.id].total, 4), score_breakdown=breakdowns[c.id].as_dict())
-        for c, (atoms, text) in zip(top, explained)
-    ]
 
 
 def _no_category(catalog: Catalog, req: SearchRequest, tr: Translator, ctx: dict, funnel: list) -> SearchResponse:
@@ -159,11 +155,9 @@ def _no_category(catalog: Catalog, req: SearchRequest, tr: Translator, ctx: dict
     places.sort(key=lambda p: (-p["n"], CITIES.index(p["city"])))
     items = [tr("search.other_city.item_synthetic" if p["synthetic"] else "search.other_city.item",
                 city=label(tr, "city", p["city"]), n=p["n"], m=p["synthetic"]) for p in places]
-    hints = []
+    hints = build_hints(catalog, req, "no_category_in_city", 0, tr)     # [P5] other_city со ссылками
     if places:
         summary = tr("search.summary.no_category_in_city", places="; ".join(items), **ctx)
-        hints.append({"type": "other_city", "text": tr("search.hint.other_city", places="; ".join(items), **ctx),
-                      "places": places})
     else:
         summary = tr("search.summary.no_category_anywhere", **ctx)
     return SearchResponse(status="no_category_in_city", summary=summary, funnel=funnel, hints=hints,
@@ -189,5 +183,5 @@ def _invalid(req: SearchRequest, errors: list[dict], tr: Translator) -> SearchRe
 
 
 def _meta(req: SearchRequest, primary_counts: dict) -> dict:
-    return {"engine": ENGINE_VERSION, "scoring": SCORING_VERSION, "weights": dict(WEIGHTS),
+    return {"engine": ENGINE_VERSION, "scoring": SCORING_VERSION, "weights": dict(WEIGHTS), "explain": "v2",
             "llm_used": False, "primary_counts": primary_counts, "request": req.to_dict()}

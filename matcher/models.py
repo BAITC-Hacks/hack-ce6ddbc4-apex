@@ -122,6 +122,7 @@ class SearchResponse:
     funnel: list[dict] = field(default_factory=list)
     hints: list[dict] = field(default_factory=list)
     meta: dict = field(default_factory=dict)
+    why_not: list[dict] = field(default_factory=list)   # [P5] [{"reason": "busy", "ids": [...], "text": "..."}]
 
     def to_dict(self) -> dict:
         return asdict(self)

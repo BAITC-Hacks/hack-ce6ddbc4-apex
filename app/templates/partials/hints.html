@@ -1,0 +1,14 @@
+{# Фаза 5: подсказки — ссылка повторяет текущий запрос с изменённой датой / бюджетом / городом #}
+{% if resp.hints %}
+{% set base_query = dict(request.query_params) %}
+<section class="hints" aria-labelledby="hints-title">
+  <h2 class="hints__title" id="hints-title">{{ t('hint.title') }}</h2>
+  <ul class="hints__list">
+    {% for h in resp.hints %}
+    <li class="hints__item hints__item--{{ h.type }}">
+      {% if h.query %}<a href="/app?{{ dict(base_query, **h.query) | urlencode }}">{{ h.text }}</a>{% else %}{{ h.text }}{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}

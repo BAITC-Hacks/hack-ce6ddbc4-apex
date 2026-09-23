@@ -140,3 +140,58 @@ def app_placeholder(request: Request):
 @router.get("/register", response_class=HTMLResponse, include_in_schema=False)
 def auth_placeholder(request: Request):
     return render(request, "app/placeholder.html", placeholder_kind="auth")
+
+
+# ---------- Фаза 5: GET /app/compare ----------
+import re
+
+from matcher.compare import compare_dates, default_second_date, short_date
+from matcher.data import WINDOW_END, WINDOW_START
+from matcher.models import SearchRequest
+
+from ..i18n import get_lang
+
+QUERY_FIELDS = ("city", "event_type", "category", "budget", "language", "duration", "wishes")
+ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _int_or_none(value):
+    try:
+        return int(value) if value not in (None, "") else None
+    except ValueError:
+        return None
+
+
+def _compare_request(params, date: str, lang: str):
+    """Query-строка /app (город, тип, категория, budget, language, duration) → SearchRequest; None, если неполно."""
+    budget = _int_or_none(params.get("budget"))
+    if not (params.get("city") and params.get("event_type") and params.get("category") and budget and date):
+        return None
+    return SearchRequest(city=params["city"], date=date, event_type=params["event_type"], category=params["category"],
+                         budget_kzt=budget, duration_h=_int_or_none(params.get("duration")),
+                         language=params.get("language") or None, wishes=params.get("wishes") or None, lang=lang)
+
+
+@router.get("/app/compare", response_class=HTMLResponse)
+def compare_page(request: Request):
+    lang, qp = get_lang(request), request.query_params
+    date_a = qp.get("date_a") or qp.get("date") or ""
+    date_a = date_a if ISO_DATE.match(date_a) else ""
+    date_b = qp.get("date_b") or (default_second_date(date_a) if date_a else "")
+    date_b = date_b if ISO_DATE.match(date_b) else ""
+    req = _compare_request(qp, date_a, lang) if date_b else None
+    ctx = {"date_a": date_a, "date_b": date_b, "hidden": {k: qp.get(k) for k in QUERY_FIELDS if qp.get(k)},
+           "window": (WINDOW_START, WINDOW_END), "result": None, "error": None, "short_date": short_date}
+    if req is None:
+        ctx["error"] = "compare.need_request"
+    elif date_a == date_b:
+        ctx["error"] = "compare.same_dates"
+    else:
+        tr = lambda key, **kw: translate(lang, key, **kw)  # noqa: E731
+        result = compare_dates(request.app.state.catalog, req, date_a, date_b, tr)
+        labels = {}
+        for kind, items in result["diff"].items():
+            for item in items:
+                labels[item["id"]] = (kind, item["label"])
+        ctx.update(result=result, labels=labels)
+    return render(request, "app/compare.html", **ctx)
