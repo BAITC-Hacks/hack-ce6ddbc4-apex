@@ -8,6 +8,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from ..i18n import SUPPORTED, translate
+from ..search import search_context
 from ..web import render
 
 router = APIRouter()
@@ -132,8 +133,8 @@ def switch_lang(code: str, request: Request):
 
 
 @router.get("/app", response_class=HTMLResponse, include_in_schema=False)
-def app_placeholder(request: Request):
-    return render(request, "app/placeholder.html", placeholder_kind="search", meta=request.app.state.catalog.meta())
+def search_page(request: Request):
+    return render(request, "app/search.html", **search_context(request))
 
 
 @router.get("/login", response_class=HTMLResponse, include_in_schema=False)

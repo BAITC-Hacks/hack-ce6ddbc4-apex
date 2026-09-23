@@ -1,0 +1,29 @@
+{% from "partials/icons.html" import icon %}
+<section id="results" class="search-results" aria-labelledby="results-title" tabindex="-1">
+  <h2 id="results-title" class="visually-hidden">{{ t('search.results_title') }}</h2>
+  {% if demo_key %}
+  <p class="search-note search-note--demo">{{ icon('info') }}<span>{{ t('search.demo_active', scenario=t('demo.' ~ demo_key)) }}</span></p>
+  {% endif %}
+  {% if state == 'empty' %}
+  <div class="search-empty">
+    <span class="search-empty__icon">{{ icon('filter') }}</span>
+    <p>{{ t('search.empty_state') }}</p>
+  </div>
+  {% elif state == 'prefill' %}
+  <div class="search-empty search-empty--prefill">
+    <span class="search-empty__icon">{{ icon('filter') }}</span>
+    <p>{{ t('search.prefill', fields=missing_fields|join(', ')) }}</p>
+  </div>
+  {% elif resp %}
+  <p class="search-changed" hidden>{{ icon('info') }}<span>{{ t('search.changed') }}</span></p>
+  {% include "partials/status_banner.html" %}
+  {% if resp.cards %}
+  <div class="result-grid result-grid--{{ resp.cards|length }}">
+    {% for card in resp.cards %}{% with rank = loop.index %}{% include "partials/result_card.html" %}{% endwith %}{% endfor %}
+  </div>
+  {% endif %}
+  {% if resp.more_count %}<p class="search-more">{{ t('search.more', n=resp.more_count) }}</p>{% endif %}
+  {% if groups %}{% include "partials/whynot.html" %}{% endif %}
+  {% if resp.funnel %}{% include "partials/funnel.html" %}{% endif %}
+  {% endif %}
+</section>

@@ -70,14 +70,14 @@ def test_landing_and_api_update_when_catalog_changes(client, tmp_path):
     assert client.get("/").context["stats"]["profiles"] == 5
 
 
-@pytest.mark.parametrize("path", ["/app", "/login", "/register"])
+@pytest.mark.parametrize("path", ["/login", "/register"])
 def test_placeholders_and_language_persistence(client, path):
     client.get("/?lang=kk")
     response = client.get(path)
     assert response.status_code == 200
     assert 'lang="kk"' in response.text
     assert response.context["user"] is None
-    assert response.context["placeholder_kind"] == ("search" if path == "/app" else "auth")
+    assert response.context["placeholder_kind"] == "auth"
 
 
 def test_query_language_overrides_and_updates_cookie(client):

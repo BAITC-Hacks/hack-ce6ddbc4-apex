@@ -1,0 +1,12 @@
+<section class="whynot" aria-labelledby="whynot-title">
+  <h3 id="whynot-title" class="whynot__title">{{ t('search.whynot.title') }}</h3>
+  <p class="whynot__overlap">{{ t('search.reasons_overlap') }}</p>
+  {% for g in groups %}
+  <details class="whynot__group whynot__group--{{ g['code'] }}"{% if loop.first %} open{% endif %}>
+    <summary class="whynot__head">{{ g['title'] }}</summary>
+    <ul class="whynot__list">
+      {% for item in g['items'] %}<li><span class="whynot__name">{{ item['name'] }}</span>{% if item['note'] %} <span class="whynot__note">— {{ item['note'] }}</span>{% endif %}</li>{% endfor %}
+    </ul>
+  </details>
+  {% endfor %}
+</section>

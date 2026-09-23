@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
+{% block title %}{{ t('search.title') }} — Tandau{% endblock %}
+{% block content %}
+{% include "partials/guest_banner.html" ignore missing %}
+<link rel="stylesheet" href="/static/css/search.css">
+<script src="/static/js/search.js" defer></script>
+<section class="search-page tl-container" aria-labelledby="search-title">
+  <header class="search-page__head">
+    <h1 id="search-title">{{ t('search.title') }}</h1>
+    <p class="search-page__subtitle">{{ t('search.subtitle') }}</p>
+  </header>
+
+  <div class="search-page__layout">
+    <div class="search-page__side">
+      {% include "partials/search_form.html" %}
+      <nav class="demo-presets" aria-labelledby="demo-title">
+        <h2 id="demo-title" class="demo-presets__title">{{ t('demo.title') }}</h2>
+        <p class="demo-presets__hint">{{ t('demo.hint') }}</p>
+        <ul class="demo-presets__list">
+          {% for d in demo %}
+          <li><a class="demo-presets__link{% if demo_key == d.key %} is-active{% endif %}" href="{{ d.href }}"{% if demo_key == d.key %} aria-current="true"{% endif %}>{{ t('demo.' ~ d.key) }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+    <div class="search-page__main">
+      {% include "partials/search_results.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}
