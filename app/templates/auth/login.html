@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
+{% block title %}{{ t('auth.login.title') }} — Tandau{% endblock %}
+{% block content %}
+{%- set invalid = error in ('auth.login.error_invalid', 'auth.login.error_missing') -%}
+{%- set invalid_attrs = ' aria-invalid="true"' if invalid else '' -%}
+<section class="tl-container account-preview auth-layout" aria-labelledby="login-title">
+  <aside class="account-story">
+    <p class="tl-eyebrow">{{ t('auth.login.kicker') }}</p>
+    <h2>{{ t('auth.login.story_title') }}</h2>
+    <p class="account-story-description">{{ t('auth.login.story_text') }}</p>
+    <ul class="account-story-features">
+      <li>{{ icon('bookmark') }}<span>{{ t('auth.preview.saved') }}</span></li>
+      <li>{{ icon('clock') }}<span>{{ t('auth.preview.history') }}</span></li>
+    </ul>
+  </aside>
+  <div class="account-panel auth-panel">
+    <div class="auth-panel-body">
+      <h1 id="login-title">{{ t('auth.login.title') }}</h1>
+      <p class="auth-lead">{{ t('auth.login.lead') }}</p>
+      {% if error %}
+      <div class="auth-errors" role="alert" id="login-error">
+        <p>{{ icon('info') }}<strong>{{ t(error, **error_params) }}</strong></p>
+      </div>
+      {% endif %}
+      <form method="post" action="/login" class="auth-form" novalidate data-busy-label="{{ t('auth.login.submitting') }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <input type="hidden" name="next" value="{{ next_path }}">
+        <div class="auth-field">
+          <label for="email">{{ t('auth.login.email') }}</label>
+          <input class="field__control" id="email" name="email" type="email" value="{{ email }}" autocomplete="username"
+                 inputmode="email" autocapitalize="none" spellcheck="false" required maxlength="254"
+                 {%- if error %} aria-describedby="login-error"{% endif %}{{ invalid_attrs | safe }}
+                 {%- if error and not email %} autofocus{% endif %}>
+        </div>
+        <div class="auth-field">
+          <label for="password">{{ t('auth.login.password') }}</label>
+          <div class="auth-password">
+            <input class="field__control" id="password" name="password" type="password" autocomplete="current-password"
+                   required maxlength="1024"
+                   {%- if error %} aria-describedby="login-error"{% endif %}{{ invalid_attrs | safe }}
+                   {%- if error and email %} autofocus{% endif %}>
+            <button class="auth-password-toggle" type="button" aria-controls="password" aria-pressed="false"
+                    aria-label="{{ t('auth.login.show_password') }}" data-password-toggle hidden>{{ icon('eye') }}</button>
+          </div>
+        </div>
+        <button class="tl-button auth-submit" type="submit">{{ t('auth.login.submit') }}{{ icon('arrow') }}</button>
+      </form>
+      {% if demo_available %}
+      <form method="post" action="/login" class="auth-demo" data-busy-label="{{ t('auth.login.submitting') }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <input type="hidden" name="next" value="{{ next_path }}">
+        <input type="hidden" name="email" value="{{ demo_email }}">
+        <input type="hidden" name="password" value="{{ demo_password }}">
+        <p class="auth-note">{{ icon('account') }}<span><strong>{{ t('auth.login.demo_title') }}.</strong>
+          {{ t('auth.login.demo_text', email=demo_email, password=demo_password) }}</span></p>
+        <button class="tl-button btn--ghost auth-submit" type="submit">{{ t('auth.login.demo_submit') }}</button>
+      </form>
+      {% endif %}
+      <div class="auth-foot">
+        <p>{{ t('auth.login.no_account') }} <a href="/register">{{ t('auth.login.register') }}</a></p>
+        <p><a href="/app">{{ t('auth.login.guest') }}</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="/static/js/auth.js" defer></script>
+{% endblock %}

@@ -70,7 +70,7 @@ def test_landing_and_api_update_when_catalog_changes(client, tmp_path):
     assert client.get("/").context["stats"]["profiles"] == 5
 
 
-@pytest.mark.parametrize("path", ["/app", "/login", "/register"])
+@pytest.mark.parametrize("path", ["/app", "/register"])
 def test_placeholders_and_language_persistence(client, path):
     client.get("/?lang=kk")
     response = client.get(path)
