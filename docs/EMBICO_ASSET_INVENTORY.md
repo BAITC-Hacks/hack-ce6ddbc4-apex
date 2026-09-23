@@ -8,7 +8,13 @@ Referenced Figma URL: https://www.figma.com/design/Qw7e2YZbnTtyiH1b25A820/embico
 
 Source SHA-256: `5cb430c10a7943be55d882e60a9cf3bf9a22d575248f9eb3a9ba4936f6a1247b`.
 
-The files below are lossless rectangular document-region extractions. They preserve the source pixels, color, shadows, and backgrounds. No transparency was manufactured, and no illustration was redrawn. These are ready for a first implementation, with native-resolution limits. They are not original transparent Figma exports.
+The nine PDF assets below are lossless rectangular document-region extractions. They preserve the source pixels, color, shadows, and backgrounds. No transparency was manufactured, and no illustration was redrawn. They are not original transparent Figma exports. The package also contains the locally supplied original `fluid-card.png`, recorded separately below.
+
+## Selected wave background — 23 September 2026
+
+The user selected the brighter blue wave behind the glass tiles in their screenshot. The matching local artwork is `/Users/k4ssym/Downloads/fluid-card.png`, copied byte-for-byte to `app/static/assets/embico/fluid-card.png`. It is a 1536 x 1024 RGB PNG, 1,869,098 bytes, with an opaque background and no glass icon tiles. SHA-256: `e61c0756f36a9d631e8443287d8f0351d5c104cf127d469b44ef1f4752fb7fe3`.
+
+This original was visually matched to the supplied screenshot; it was not newly exported from live Figma, and its exact Figma node is unverified. It is the selected background for the current designbook hero, authentication samples and screen samples, replacing the pale wave in those placements. Preserve its proportions and use layout cropping without recoloring or stretching. The nine PDF crops remain in the asset archive and have not been overwritten. The gallery displays the selected original and eight PDF crops; the replaced pale `glass-wave-wide.png` remains archived only. `fluid-card` is received and must not be requested again.
 
 ## Exact sampled source palette
 
@@ -78,11 +84,11 @@ All implementation files are in `app/static/assets/embico/`. Coordinates below a
 | `timer-3d.png` | 17 / 136 | `[112, 316, 352, 556]` | 240 x 240 | `#FFFFFF` | Fast shortlist / delivery time |
 | `stack-3d.png` | 17 / 136 | `[688, 316, 928, 556]` | 240 x 240 | `#FAFAFB` | Comparison and layered evidence |
 | `grid-3d.png` | 17 / 136 | `[1288, 316, 1528, 556]` | 240 x 240 | `#FFFFFF` | Categories and dashboard modules |
-| `glass-wave-wide.png` | 24 / 192 | `[0, 700, 1920, 1080]` | 1920 x 380 | `mixed white and translucent blue` | Decorative wide footer or masthead edge |
+| `glass-wave-wide.png` | 24 / 192 | `[0, 700, 1920, 1080]` | 1920 x 380 | `mixed white and translucent blue` | Archived pale-wave reference; superseded by `fluid-card.png` for current hero/auth/screen backgrounds |
 | `glass-wave-blue-edge.png` | 1 / 9 | `[0, 0, 200, 1080]` | 200 x 1080 | `mixed blue` | Decorative edge only; native width is 200 pixels |
 | `cobalt-grid-strip.png` | 25 / 200 | `[0, 200, 1920, 380]` | 1920 x 180 | `#2B5FE3` | Decorative blue band |
 
-The six square illustrations are 240 x 240 pixels including their margins. Recommended screen display size is 88-120 CSS pixels, leaving enough density for ordinary high-density screens. Do not enlarge a square to a full-screen hero. Prefer the 1920-pixel wave for large decorative areas.
+The six square illustrations are 240 x 240 pixels including their margins. Recommended screen display size is 88-120 CSS pixels, leaving enough density for ordinary high-density screens. Do not enlarge a square to a full-screen hero. Use the selected original `fluid-card.png` for the current large wave backgrounds, within its native-resolution limits.
 
 `chain-3d.png` and `stack-3d.png` have a solid `#FAFAFB` background; place them on that exact surface. The other four square illustrations have white backgrounds. Avoid dark surfaces and arbitrary tinted panels behind these rectangular assets. CSS `mix-blend-mode` is not required and can change the source appearance.
 
@@ -122,14 +128,14 @@ Use `alt=""` when an illustration duplicates nearby wording and is decorative. I
 | 28 | Four quadrants of technical text | 224 |
 | 29 | Source bibliography | 232 |
 
-Full-page intermediate images and overview sheets were kept outside the repository at `/tmp/tandau-embico-reference/`. The repository includes only reusable extracted regions and their machine-readable `manifest.json`.
+Full-page intermediate images and overview sheets were kept outside the repository at `/tmp/tandau-embico-reference/`. The repository includes the nine reusable extracted regions, the selected local original `fluid-card.png`, and their machine-readable `manifest.json`.
 
 ## Export requests to complete Figma fidelity
 
 The current assets support a visible working designbook. To match the original editable design exactly and use the illustrations on arbitrary backgrounds, request these specific items:
 
 1. Transparent PNG or WebP at 2x (or SVG when truly vector) for the six 3D illustrations, retaining their soft shadows. Prefer at least 512 x 512 pixels.
-2. Original full glass-wave artwork without overlaid text or application screenshots, ideally 2400 pixels wide or more.
+2. `fluid-card.png` is received and selected; no further request is needed for that background. `cover-hero` and `fluid-auth` remain outside the imported package and require separate source verification/integration. Any needed transparent variants should be requested specifically, without replacing the selected `fluid-card` background automatically.
 3. The font family and main type styles have now been verified in live Figma and official Geist files are included locally. Request any further custom type styles only if they appear in additional frames.
 4. The main color styles have now been verified in live Figma. Request additional exported spacing/radius tokens if exact component geometry is needed beyond the inspected frames.
 5. Any Tandau-specific wordmark, logo artwork, or icon set that should replace the reference brand.

@@ -12,3 +12,8 @@
 /* Contrast and touch-size corrections after visual review. */
 .db-auth-art .db-caption,.db-auth-art .db-kicker{color:#B9C9E0}
 @media(max-width:560px){.db-field input,.db-field select,.db-field textarea,.db-search-side .db-field input,.db-search-side .db-field select{font-size:16px}.db-btn--sm{min-height:44px}.db-top-actions .db-btn{min-height:44px}}
+
+/* Selected original blue wave; crop the source without recoloring its pixels. */
+.db-wave,.db-mini-wave{object-position:center 62%}
+.db-auth-art img{height:140px;object-fit:cover;object-position:center 62%;mix-blend-mode:normal}
+@media(max-width:560px){.db-wave,.db-mini-wave{object-position:center 62%}.db-auth-art img{height:85px}}
