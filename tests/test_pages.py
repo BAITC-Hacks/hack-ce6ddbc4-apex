@@ -71,13 +71,16 @@ def test_landing_and_api_update_when_catalog_changes(client, tmp_path):
 
 
 @pytest.mark.parametrize("path", ["/app", "/login", "/register"])
-def test_placeholders_and_language_persistence(client, path):
+def test_guest_pages_keep_language(client, path):
     client.get("/?lang=kk")
     response = client.get(path)
     assert response.status_code == 200
     assert 'lang="kk"' in response.text
     assert response.context["user"] is None
-    assert response.context["placeholder_kind"] == ("search" if path == "/app" else "auth")
+    if path == "/app":
+        assert response.context["brief"].state == "empty"
+    else:
+        assert response.context["placeholder_kind"] == "auth"
 
 
 def test_query_language_overrides_and_updates_cookie(client):
@@ -135,6 +138,55 @@ def test_language_redirect_rejects_unsafe_referers(client, referer):
 def test_language_redirect_accepts_same_origin(client, referer):
     response = client.get("/lang/kk", headers={"referer": referer}, follow_redirects=False)
     assert response.headers["location"] == "/app?city=Almaty"
+
+
+def test_language_next_keeps_the_brief_and_fragment(client):
+    target = "/app?city=Алматы&budget=1000000&lang=ru#brief"
+    response = client.get("/lang/en", params={"next": target}, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == (
+        "/app?city=%D0%90%D0%BB%D0%BC%D0%B0%D1%82%D1%8B&budget=1000000#brief"
+    )
+    assert response.cookies["lang"] == "en"
+
+
+def test_language_next_wins_over_referer(client):
+    response = client.get(
+        "/lang/kk", params={"next": "/?city=Астана"},
+        headers={"referer": "http://testserver/app"}, follow_redirects=False,
+    )
+    assert response.headers["location"].startswith("/?city=")
+
+
+@pytest.mark.parametrize("target", [
+    "https://attacker.example/",
+    "//attacker.example/",
+    "///attacker.example/",
+    "/\\attacker.example/",
+    "/%5cattacker.example/",
+    "/%2f%2fattacker.example/",
+    "/%2F/attacker.example/",
+    "/%0d%0aLocation:%20https://attacker.example/",
+    "/\tattacker",
+    "javascript:alert(1)",
+    "app",
+    "",
+])
+def test_language_next_rejects_non_local_targets(client, target):
+    response = client.get("/lang/en", params={"next": target}, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers["location"] == "/"
+
+
+def test_language_next_repeated_is_rejected(client):
+    response = client.get("/lang/en?next=/app&next=/", follow_redirects=False)
+    assert response.headers["location"] == "/"
+
+
+def test_language_links_carry_the_current_page(client):
+    response = client.get("/app?city=Алматы&lang=kk")
+    assert "/lang/en?next=%2Fapp%3Fcity%3D%25D0%2590" in response.text
+    assert "next=%2Fapp%3Fcity%3D%25D0%2590%25D0%25BB%25D0%25BC%25D0%25B0%25D1%2582%25D1%258B%26lang" not in response.text
 
 
 def test_unknown_language_switch_does_not_change_cookie(client):

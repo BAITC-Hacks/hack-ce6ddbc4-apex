@@ -1,5 +1,5 @@
 <div class="tl-language" role="group" aria-label="{{ t('nav.language') }}">
   {% for code, name in [('ru', 'RU'), ('kk', 'ҚАЗ'), ('en', 'EN')] %}
-    <a href="/lang/{{ code }}" lang="{{ code }}" hreflang="{{ code }}" aria-label="{{ {'ru':'Русский','kk':'Қазақша','en':'English'}[code] }}"{% if lang == code %} aria-current="true" class="is-active"{% endif %}>{{ name }}</a>
+    <a href="{{ lang_url(code) }}" lang="{{ code }}" hreflang="{{ code }}" data-lang-link="{{ code }}"{% if lang == code %} aria-current="true" class="is-active"{% endif %}>{{ name }}<span class="visually-hidden"> {{ {'ru':'Русский','kk':'Қазақша','en':'English'}[code] }}</span></a>
   {% endfor %}
 </div>

@@ -7,15 +7,17 @@
   <meta name="color-scheme" content="light">
   <meta name="description" content="{{ t('meta.description') }}">
   <title>{% block title %}Tandau{% endblock %}</title>
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/static/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="{{ static_url('css/app.css') }}">
+  <link rel="stylesheet" href="{{ static_url('css/components.css') }}">
 </head>
 <body>
   <a class="tl-skip" href="#main">{{ t('common.skip_to_content') }}</a>
   {% include 'partials/header.html' %}
   <main id="main" tabindex="-1">{% block content %}{% endblock %}</main>
   {% include 'partials/footer.html' %}
-  <script src="/static/js/app.js" defer></script>
+  <script src="{{ static_url('js/app.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

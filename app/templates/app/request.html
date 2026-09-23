@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}{{ t('request.title') }} · Tandau{% endblock %}
+{% block content %}
+{% macro accent(name, alt='') -%}
+<figure class="tl-request-accent"><img src="/static/assets/tandau/img/{{ name }}-640.jpg" width="640" height="480" alt="{{ alt }}" decoding="async"></figure>
+{%- endmacro %}
+<div class="tl-container tl-request-page">
+  <div class="tl-workspace tl-request" data-request data-state="{{ brief.state }}" data-storage-key="{{ storage_key }}">
+    <aside class="tl-app-sidebar tl-request-sidebar" aria-label="{{ t('request.sidebar') }}">
+      <a class="tl-wordmark tl-app-logo" href="/" aria-label="{{ t('nav.home') }}">{{ wordmark() }}</a>
+      <nav aria-label="{{ t('request.sidebar') }}">
+        <a class="tl-app-active" href="/app{{ '?' ~ brief.query() if brief.present }}" aria-current="page">{{ icon('filter') }}{{ t('request.nav_conditions') }}</a>
+        <a href="/#example">{{ icon('eye') }}{{ t('request.nav_example') }}</a>
+      </nav>
+      <div class="tl-guest">{{ icon('account') }}<div>{{ t('request.guest') }}<small>{{ t('request.guest_note') }}</small></div></div>
+    </aside>
+    <div class="tl-app-main">
+      <div class="tl-app-topbar"><p><span>Tandau</span><span aria-hidden="true">/</span><strong>{{ t('request.nav_conditions') }}</strong></p></div>
+      <div class="tl-app-content">
+        {% if brief.state == 'empty' %}
+          <div class="tl-request-empty">
+            {{ accent('tandau-open-folder') }}
+            <div>
+              <h1>{{ t('request.empty.title') }}</h1>
+              <p>{{ t('request.empty.text') }}</p>
+              <div class="tl-request-actions">
+                <a class="tl-button" href="/#brief">{{ t('request.empty.action') }} {{ icon('arrow') }}</a>
+                <a class="tl-text-link" href="/#example">{{ t('request.example_action') }} {{ icon('eye') }}</a>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="tl-request-head">
+            <div>
+              <p class="tl-eyebrow">{{ t('request.eyebrow') }}</p>
+              <h1>{{ t('request.title') }}</h1>
+            </div>
+            <p class="tl-request-count">{{ t('landing.event_card.progress', n=brief.filled) }}</p>
+          </div>
+
+          {% if brief.state == 'invalid' %}
+          <div class="tl-error-summary" id="request-errors" tabindex="-1" aria-labelledby="request-errors-title">
+            <p class="tl-error-title" id="request-errors-title">{{ icon('info') }}<span>{{ t('request.invalid.title') }}</span></p>
+            <ul>{% for item in brief.invalid %}<li><a href="{{ edit_links[item.name] }}">{{ t('brief.' ~ item.name ~ '.label') }}. {{ t(item.error) }}</a></li>{% endfor %}</ul>
+          </div>
+          {% endif %}
+
+          <dl class="tl-request-list">
+            {% for name in fields %}{% set item = brief[name] %}
+            <div class="tl-request-row{% if item.error %} is-invalid{% elif item.missing %} is-missing{% endif %}">
+              <dt><span class="tl-step" aria-hidden="true">0{{ loop.index }}</span>{{ t('brief.' ~ name ~ '.label') }}</dt>
+              <dd>
+                <span class="tl-request-value">
+                {% if item.valid %}
+                  {% if name == 'city' %}{{ label('city', item.value) }}
+                  {% elif name == 'date' %}{{ date_value.full }}
+                  {% elif name == 'event_type' %}{{ label('format', item.value)|capitalize }}
+                  {% elif name == 'category' %}{{ label('category', item.value) }}
+                    <small>{% if coverage is none %}{{ t('brief.category.coverage_city') }}{% elif coverage %}{{ t('brief.category.coverage', n=coverage) }}{% else %}{{ t('brief.category.coverage_zero') }}{% endif %}</small>
+                  {% else %}{{ t('landing.event_card.budget_value', amount=item.value|kzt) }}<small>{{ t('brief.budget.scope') }}</small>{% endif %}
+                {% elif item.error %}
+                  {% if item.raw %}<span class="tl-request-raw">{{ item.raw }}</span>{% endif %}
+                  <span class="tl-field-error">{{ icon('info') }}<span>{{ t(item.error) }}</span></span>
+                {% else %}
+                  <span class="tl-request-missing">{{ t('request.missing') }}</span>
+                {% endif %}
+                </span>
+                <a class="tl-request-edit" href="{{ edit_links[name] }}">{{ t('request.fix' if item.error else ('request.add' if item.missing else 'request.edit')) }}<span class="visually-hidden">: {{ t('brief.' ~ name ~ '.label') }}</span> {{ icon('arrow') }}</a>
+              </dd>
+            </div>
+            {% endfor %}
+          </dl>
+
+          {% if brief.state == 'ready' %}
+          <div class="tl-request-state tl-request-state--ready">
+            {{ accent('tandau-complete') }}
+            <div>
+              <h2>{{ t('request.ready.title') }}</h2>
+              <p>{{ t('request.ready.text') }}</p>
+              <div class="tl-request-actions">
+                <a class="tl-button" href="/#example">{{ t('request.example_action') }} {{ icon('eye') }}</a>
+                <a class="tl-button tl-button--secondary" href="{{ edit_all }}">{{ t('request.edit_all') }} {{ icon('filter') }}</a>
+              </div>
+            </div>
+          </div>
+          {% elif brief.state == 'incomplete' %}
+          <div class="tl-request-state">
+            <div>
+              <h2>{{ t('request.incomplete.title') }}</h2>
+              <p>{{ t('request.incomplete.text') }}</p>
+              <ul class="tl-request-missing-list">{% for item in brief.missing %}<li>{{ t('brief.' ~ item.name ~ '.label') }}</li>{% endfor %}</ul>
+              <div class="tl-request-actions">
+                <a class="tl-button" href="{{ edit_links[first_open] }}">{{ t('request.incomplete.action') }} {{ icon('arrow') }}</a>
+                <a class="tl-text-link" href="/#example">{{ t('request.example_action') }} {{ icon('eye') }}</a>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="tl-request-state tl-request-state--invalid">
+            <div>
+              <h2>{{ t('request.invalid.state') }}</h2>
+              <p>{{ t('request.invalid.text') }}</p>
+              <div class="tl-request-actions">
+                <a class="tl-button" href="{{ edit_links[first_open] }}">{{ t('request.invalid.action') }} {{ icon('arrow') }}</a>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endif %}
+        <p class="tl-request-note" data-storage-note hidden>{{ icon('info') }}<span>{{ t('brief.draft.unavailable') }}</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ static_url('js/brief.js') }}" defer></script>
+{% endblock %}

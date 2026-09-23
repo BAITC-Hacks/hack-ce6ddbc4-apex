@@ -1,14 +1,37 @@
-<article class="tl-result" data-profile="{{ c.id }}">
-  <div class="tl-card-top"><span class="tl-profile-number">{{ t('card.option', n='%02d'|format(card_number)) }}</span><button class="tl-save" type="button" aria-pressed="false" aria-label="{{ t('card.save', name=c.name) }}" data-save-label="{{ t('card.save', name=c.name) }}" data-remove-label="{{ t('card.remove', name=c.name) }}">{{ icon('bookmark') }}</button></div>
-  <div class="tl-profile"><div class="tl-profile-initial" aria-hidden="true">{{ c.name[0] }}</div><h4>{{ c.name }}</h4><p>{{ label('category', c.category) }} · {{ label('city', c.city) }}</p></div>
-  <div class="tl-card-price"><span>{{ t('card.starting_price') }}</span><strong>{{ c.price|kzt }}</strong><div class="tl-price-track" role="img" aria-label="{{ t('card.budget_share', n=(c.price / 10000)|round|int) }}"><span style="width:{{ [c.price / 10000, 100]|min }}%"></span></div></div>
-  <div class="tl-budget-margin"><span>{{ t('card.headroom' if c.price < 1000000 else 'card.budget_limit') }}</span><strong>{{ (1000000-c.price)|kzt if c.price < 1000000 else t('card.budget_warning') }}</strong></div>
-  {% if c.badges %}<div class="tl-card-flags">{% for b in c.badges %}<span class="badge badge--{{ b }}">{{ icon('info') }}{{ t('badge.' ~ b) }}</span>{% endfor %}</div>{% endif %}
+{#- One record of the fixed, labelled example. Facts come from the catalogue by ID. -#}
+<article class="tl-result" data-profile="{{ c.id }}" aria-labelledby="profile-{{ c.id }}">
+  <div class="tl-card-top"><span class="tl-profile-number">{{ t('card.option', n='%02d'|format(card_number)) }}</span><span class="tl-profile-initial" aria-hidden="true">{{ c.name[0] }}</span></div>
+  <div class="tl-profile"><h3 id="profile-{{ c.id }}">{{ c.name }}</h3><p>{{ label('category', c.category) }} · {{ label('city', c.city) }}</p></div>
+  <div class="tl-card-price">
+    <span>{{ t('card.starting_price') }}</span>
+    <strong>{{ t('card.price_from', price=c.price|kzt) }}</strong>
+    <div class="tl-budget-margin">
+      {% if c.headroom > 0 %}<span>{{ t('card.headroom') }}</span><strong>{{ c.headroom|kzt }}</strong>
+      {% elif c.headroom == 0 %}<span>{{ t('card.budget_limit') }}</span>
+      {% else %}<span>{{ t('card.over_budget') }}</span>{% endif %}
+    </div>
+    <div class="tl-price-track" aria-hidden="true"><span style="width:{{ [c.share, 100]|min }}%"></span></div>
+    <p class="tl-price-share">{{ t('card.budget_share', n=c.share) }}</p>
+  </div>
   <dl class="tl-card-facts">
-    <div><dt>{{ t('card.availability') }}</dt><dd>{{ t('card.demo_available' if c.demo_date_available else 'card.demo_busy') }}</dd></div>
-    <div><dt>{{ t('card.duration') }}</dt><dd>{{ t('card.hours', n=c.hours) }}</dd></div>
-    <div><dt>{{ t('card.languages') }}</dt><dd>{% for language in c.languages %}{{ label('language', language) }}{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>
+    <div><dt>{{ icon('calendar') }}{{ t('card.availability') }}</dt><dd>{{ t('card.demo_available' if c.demo_date_available else 'card.demo_busy') }}</dd></div>
+    <div><dt>{{ icon('info') }}{{ t('card.languages') }}</dt><dd>{% for language in c.languages %}{{ label('language', language) }}{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>
+    <div><dt>{{ icon('clock') }}{{ t('card.duration') }}</dt><dd>{{ t('card.hours_catalog', n=c.hours) if c.hours else t('card.hours_unknown') }}</dd></div>
   </dl>
-  <details class="tl-card-reason" open><summary>{{ t('card.why') }}<span aria-hidden="true">+</span></summary><p>{{ t(c.text_key) }}</p><p class="tl-evidence-source">{{ t('card.source', id=c.id) }}</p></details>
-  <div class="tl-card-footer">{{ t('card.price_note') }}</div>
+  {% if c.quote %}<blockquote class="tl-card-quote"><p lang="ru">«{{ c.quote }}»</p><footer>{{ t('card.quote_source') }}</footer></blockquote>{% endif %}
+  {% if c.badges %}<ul class="tl-card-flags">{% for b in c.badges %}<li>{{ icon('info') }}{{ t('badge.' ~ b) }}</li>{% endfor %}</ul>{% endif %}
+  <details class="tl-card-reason">
+    <summary>{{ t('card.why') }}<span aria-hidden="true"></span></summary>
+    <p>{{ t(c.text_key) }}</p>
+    <dl class="tl-evidence">
+      <div><dt>{{ t('card.evidence.id') }} <code>id</code></dt><dd>{{ c.id }}</dd></div>
+      <div><dt>{{ t('card.evidence.price') }} <code>price_from_kzt</code></dt><dd>{{ c.price|kzt }}</dd></div>
+      <div><dt>{{ t('card.evidence.hours') }} <code>max_hours</code></dt><dd>{{ t('card.hours', n=c.hours) if c.hours else t('card.hours_unknown') }}</dd></div>
+      <div><dt>{{ t('card.evidence.languages') }} <code>languages</code></dt><dd>{% for language in c.languages %}{{ label('language', language) }}{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>
+      <div><dt>{{ t('card.evidence.formats') }} <code>event_formats</code></dt><dd>{% for item in c.event_formats %}{{ label('format', item) }}{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>
+      {% for flag, value in c.flags.items() %}<div><dt>{{ t('card.evidence.' ~ flag) }} <code>{{ flag }}</code></dt><dd>{{ t('common.yes' if value else 'common.no') }}</dd></div>{% endfor %}
+    </dl>
+    <p class="tl-evidence-source">{{ t('card.source', id=c.id) }}</p>
+    <p class="tl-evidence-source">{{ t('card.price_note') }}</p>
+  </details>
 </article>

@@ -1,77 +1,149 @@
 {% extends 'base.html' %}
 {% block title %}Tandau · {{ t('landing.hero.title_short') }}{% endblock %}
 {% block content %}
-<section class="tl-hero tl-container">
+{% macro accent(name, width, height, alt='') -%}
+<figure class="tl-accent"><img src="/static/assets/tandau/img/{{ name }}-640.jpg" srcset="/static/assets/tandau/img/{{ name }}-640.jpg 640w, /static/assets/tandau/img/{{ name }}-1200.jpg 1200w" sizes="(max-width: 767px) 100vw, 360px" width="{{ width }}" height="{{ height }}" alt="{{ alt }}" loading="lazy" decoding="async"></figure>
+{%- endmacro %}
+<section class="tl-hero tl-container" aria-labelledby="hero-title">
   <div class="tl-hero-copy">
     <p class="tl-eyebrow"><span></span>{{ t('landing.eyebrow') }}</p>
-    <h1>{{ t('landing.hero.title') }}</h1>
+    <h1 id="hero-title">{{ t('landing.hero.title') }}</h1>
     <p class="tl-hero-description">{{ t('landing.hero.subtitle') }}</p>
-    <div class="tl-hero-actions"><a class="tl-button" href="/app">{{ t('landing.hero.cta_primary') }} {{ icon('arrow') }}</a><a class="tl-text-link" href="#workspace">{{ t('landing.hero.example_cta') }} {{ icon('eye') }}</a></div>
-    <p class="tl-hero-note">{{ t('landing.hero.note') }}</p>
-    <dl class="tl-hero-proof">{% for field in ['profiles','categories','cities'] %}<div><dt>{{ t('landing.stats.' ~ field) }}</dt><dd>{{ stats[field] }}</dd></div>{% endfor %}</dl>
+    <p class="tl-hero-scope">{{ icon('info') }}<span>{{ t('landing.hero.one_category') }}</span></p>
+    <div class="tl-hero-actions">
+      <a class="tl-button" href="#brief">{{ t('landing.hero.cta_primary') }} {{ icon('arrow') }}</a>
+      <a class="tl-text-link" href="#example">{{ t('landing.hero.example_cta') }} {{ icon('eye') }}</a>
+    </div>
+    <p class="tl-hero-note">{{ t('landing.hero.current') }}</p>
+    <dl class="tl-hero-proof">
+      <div><dt>{{ t('landing.stats.profiles') }}</dt><dd>{{ stats.profiles }}</dd></div>
+      <div><dt>{{ t('landing.stats.categories') }}</dt><dd>{{ stats.categories }}</dd></div>
+      <div><dt>{{ t('landing.stats.cities') }}</dt><dd>{{ stats.cities }}</dd></div>
+    </dl>
   </div>
-  <aside class="tl-event-board" aria-label="{{ t('landing.board.title') }}">
-    <div class="tl-board-top"><span>{{ t('landing.board.title') }}</span><span>{{ label('city','Алматы') }}</span></div>
-    <div class="tl-event-date"><span>17</span><div>{{ t('demo.month') }}<br><strong>2026</strong></div><span class="tl-event-day">{{ t('demo.weekday') }}</span></div>
-    <div class="tl-event-title"><span class="tl-eyebrow">{{ label('format','свадьба') }}</span><h2>{{ t('landing.board.need') }}</h2></div>
-    <div class="tl-board-rule"></div>
-    <div class="tl-event-budget"><span>{{ t('landing.board.budget') }}</span><strong>{{ 1000000|kzt }}</strong></div>
-    <div class="tl-board-selection"><div><span>{{ t('landing.board.example') }}</span><strong>{{ t('landing.board.profiles', n=example_cards|length) }}</strong></div><div class="tl-monograms" aria-hidden="true">{% for c in example_cards %}<span>{{ c.name[0] }}</span>{% endfor %}</div></div>
-    <a class="tl-board-link" href="#workspace">{{ t('landing.board.open') }} {{ icon('arrow') }}</a><p class="tl-board-note">{{ t('landing.board.note') }}</p>
-  </aside>
+  {% include 'partials/event_card.html' %}
 </section>
-<section class="tl-brief-wrap" id="brief" aria-labelledby="brief-heading">
-  <div class="tl-container"><div class="tl-brief-heading"><h2 id="brief-heading">{{ t('landing.brief.title') }}</h2><p>{{ t('landing.brief.note') }}</p></div>
-    <form class="tl-brief" action="/app" method="get">
-      <div class="tl-brief-cell"><label for="brief-city">{{ icon('location') }}{{ t('search.city') }}</label><select name="city" id="brief-city">{% for city in meta.cities %}<option value="{{ city }}">{{ label('city',city) }}</option>{% endfor %}</select></div>
-      <div class="tl-brief-cell"><label for="brief-date">{{ icon('calendar') }}{{ t('search.date') }}</label><input name="date" id="brief-date" type="date" value="2026-10-17" min="{{ meta.window.start }}" max="{{ meta.window.end }}" required></div>
-      <div class="tl-brief-cell"><label for="brief-format">{{ icon('grid') }}{{ t('search.event_type') }}</label><select name="event_type" id="brief-format">{% for format in meta.event_formats %}<option value="{{ format }}">{{ label('format',format) }}</option>{% endfor %}</select></div>
-      <div class="tl-brief-cell"><label for="brief-category">{{ icon('search') }}{{ t('search.category') }}</label><select name="category" id="brief-category">{% for category in categories %}<option value="{{ category.name }}"{% if category.name == 'Ведущий' %} selected{% endif %}>{{ label('category',category.name) }}</option>{% endfor %}</select></div>
-      <div class="tl-brief-cell"><label for="brief-budget">{{ icon('wallet') }}{{ t('search.budget') }}</label><input name="budget" id="brief-budget" type="number" value="1000000" min="1" required></div>
-      <button class="tl-button" type="submit">{{ t('landing.brief.action') }} {{ icon('arrow') }}</button>
-    </form>
+
+{% include 'partials/brief_form.html' %}
+
+<section class="tl-section tl-container tl-how" id="how" aria-labelledby="how-heading">
+  <div class="tl-how-head">
+    <div class="tl-section-heading">
+      <p class="tl-eyebrow">{{ t('landing.how.eyebrow') }}</p>
+      <h2 id="how-heading" tabindex="-1">{{ t('landing.how.title') }}</h2>
+      <p>{{ t('landing.how.subtitle') }}</p>
+    </div>
+    {{ accent('tandau-brief', 640, 480) }}
   </div>
+  <ol class="tl-steps">
+    {% for glyph in ['filter', 'compare', 'info'] %}
+    <li><div class="tl-step-top"><span>0{{ loop.index }}</span>{{ icon(glyph) }}</div><h3>{{ t('landing.how.step' ~ loop.index ~ '.title') }}</h3><p>{{ t('landing.how.step' ~ loop.index ~ '.text') }}</p></li>
+    {% endfor %}
+  </ol>
 </section>
-<section class="tl-section tl-container" id="how">
-  <div class="tl-section-heading"><p class="tl-eyebrow">{{ t('landing.how.eyebrow') }}</p><h2>{{ t('landing.how.title') }}</h2><p>{{ t('landing.how.subtitle') }}</p></div>
-  <ol class="tl-steps">{% for glyph in ['filter','compare','bookmark'] %}<li><div class="tl-step-top"><span>0{{ loop.index }}</span>{{ icon(glyph) }}</div><h3>{{ t('landing.how.step' ~ loop.index ~ '.title') }}</h3><p>{{ t('landing.how.step' ~ loop.index ~ '.text') }}</p><span class="tl-step-meta">{{ t('landing.how.step' ~ loop.index ~ '.meta') }}</span></li>{% endfor %}</ol>
-</section>
-<section class="tl-workspace-section" id="workspace" aria-labelledby="workspace-heading" data-preview data-results-label="{{ t('landing.workspace.results') }}" data-saved-label="{{ t('landing.workspace.saved') }}" data-count-label="{{ t('landing.workspace.count',n='{n}') }}" data-count-one-label="{{ t('landing.workspace.count_one',n='{n}') }}" data-saved-message="{{ t('preview.saved') }}" data-removed-message="{{ t('preview.removed') }}">
+
+<section class="tl-workspace-section" id="example" aria-labelledby="example-heading">
   <div class="tl-container">
-    <div class="tl-section-heading tl-workspace-heading"><div><p class="tl-eyebrow">{{ t('landing.workspace.eyebrow') }}</p><h2 id="workspace-heading">{{ t('landing.workspace.title') }}</h2></div><p>{{ t('landing.workspace.description') }}</p></div>
+    <div class="tl-example-head">
+      <div class="tl-section-heading">
+        <p class="tl-eyebrow">{{ t('landing.example.eyebrow') }}</p>
+        <h2 id="example-heading" tabindex="-1">{{ t('landing.example.title') }}</h2>
+        <p class="tl-example-query">{{ t('landing.example.query', city=label('city', example['city'].value), date=date_parts(example['date'].value).full, format=label('format', example['event_type'].value), category=label('category', example['category'].value)|lower, budget=example['budget'].value|kzt, language=label('language', example_language), hours=example_hours) }}</p>
+      </div>
+      {{ accent('tandau-choice-tray', 640, 480) }}
+    </div>
     <div class="tl-workspace">
-      <aside class="tl-app-sidebar" aria-label="{{ t('landing.workspace.eyebrow') }}">
-        <a class="tl-wordmark tl-app-logo" href="#main" aria-label="Tandau">{{ wordmark() }}</a><p class="tl-app-caption">{{ t('landing.workspace.event') }}</p>
-        <nav><a class="tl-app-active" id="preview-all" href="#workspace" aria-current="page">{{ icon('search') }}{{ t('nav.search') }}</a><button type="button" id="show-saved" aria-pressed="false">{{ icon('bookmark') }}{{ t('landing.workspace.shortlist') }} <span id="saved-count">0</span></button><a href="#faq">{{ icon('info') }}{{ t('nav.questions') }}</a></nav>
-        <div class="tl-sidebar-request"><span>{{ label('format','свадьба') }}</span><strong>{{ label('city','Алматы') }}</strong><p>{{ t('demo.date') }}</p><div><span>{{ t('search.category') }}</span><strong>{{ label('category','Ведущий') }}</strong></div><div><span>{{ t('search.budget') }}</span><strong>{{ 1000000|kzt }}</strong></div><a class="tl-sidebar-edit" href="/app">{{ t('landing.workspace.edit') }} {{ icon('filter') }}</a></div>
-        <div class="tl-guest">{{ icon('account') }}<div>{{ t('landing.workspace.guest') }}<small>{{ t('landing.workspace.session_only') }}</small></div></div>
+      <aside class="tl-app-sidebar" aria-label="{{ t('landing.example.summary') }}">
+        <span class="tl-wordmark tl-app-logo" aria-hidden="true">{{ wordmark() }}</span>
+        <nav aria-label="{{ t('landing.example.nav') }}"><a class="tl-app-active" href="#example-results" aria-current="true">{{ icon('search') }}{{ t('landing.example.nav_item') }}</a></nav>
+        <div class="tl-sidebar-request">
+          <p class="tl-app-caption">{{ t('landing.example.summary') }}</p>
+          <span>{{ label('format', example['event_type'].value)|capitalize }}</span>
+          <strong>{{ label('city', example['city'].value) }}</strong>
+          <p>{{ date_parts(example['date'].value).full }}</p>
+          <dl>
+            <div><dt>{{ t('brief.category.label') }}</dt><dd>{{ label('category', example['category'].value) }}</dd></div>
+            <div><dt>{{ t('brief.budget.label') }}</dt><dd>{{ t('landing.event_card.budget_value', amount=example['budget'].value|kzt) }}</dd></div>
+            <div><dt>{{ t('landing.example.language') }}</dt><dd>{{ label('language', example_language)|capitalize }}</dd></div>
+            <div><dt>{{ t('landing.example.duration') }}</dt><dd>{{ t('card.hours', n=example_hours) }}</dd></div>
+          </dl>
+        </div>
       </aside>
       <div class="tl-app-main">
-        <header class="tl-app-topbar"><div><span>{{ t('nav.search') }}</span><span aria-hidden="true">/</span><strong>{{ t('demo.event') }}</strong></div><a href="/login">{{ t('nav.login') }} {{ icon('account') }}</a></header>
-        <div class="tl-app-content">
-          <div class="tl-results-heading"><div><span class="tl-eyebrow">{{ t('demo.date') }}</span><h3 id="results-heading" tabindex="-1">{{ t('landing.workspace.results') }}</h3></div><span class="tl-result-total">{{ t('landing.workspace.count',n=example_cards|length) }}</span></div>
-          <div class="tl-query-strip"><span>{{ icon('location') }}{{ label('city','Алматы') }}</span><span>{{ icon('grid') }}{{ label('category','Ведущий') }}</span><span>{{ icon('wallet') }}{{ 1000000|kzt }}</span><span>{{ icon('clock') }}{{ t('card.hours',n=8) }}</span><span>{{ label('language','казахский') }}</span></div>
-          <p class="tl-static-notice">{{ t('landing.workspace.notice') }}</p>
-          <div class="tl-results">{% for c in example_cards %}{% set card_number = loop.index %}{% include 'partials/card.html' %}{% endfor %}</div>
-          <p id="saved-empty" class="tl-empty" hidden>{{ t('landing.workspace.empty') }}</p>
-          <div class="tl-result-bottom"><p>{{ t('preview.price_note') }}</p><button type="button" id="show-all" hidden>{{ t('landing.workspace.show_all') }} {{ icon('arrow') }}</button></div>
+        <div class="tl-app-topbar">
+          <p><span>{{ t('landing.example.nav_item') }}</span><span aria-hidden="true">/</span><strong>{{ t('landing.example.scenario', format=label('format', example['event_type'].value)|capitalize, city=label('city', example['city'].value)) }}</strong></p>
+          <a href="/?{{ example_query }}#brief" data-fill-example>{{ icon('copy') }}{{ t('landing.example.fill') }}</a>
+        </div>
+        <div class="tl-app-content" id="example-results">
+          <p class="tl-static-notice">{{ icon('info') }}<span>{{ t('landing.example.static') }}</span></p>
+          {% if example_cards|length < example_expected %}<p class="tl-notice tl-notice--warn">{{ icon('info') }}<span>{{ t('landing.example.partial') }}</span></p>{% endif %}
+          <div class="tl-results tl-results--{{ example_cards|length }}">
+            {% for c in example_cards %}{% set card_number = loop.index %}{% include 'partials/card.html' %}{% endfor %}
+          </div>
+          <p class="tl-result-bottom">{{ t('landing.example.transfer') }}</p>
         </div>
       </div>
     </div>
   </div>
 </section>
-<section class="tl-section tl-container tl-categories-section" id="categories">
-  <div class="tl-section-heading"><p class="tl-eyebrow">{{ t('landing.categories.eyebrow') }}</p><h2>{{ t('landing.categories.subtitle') }}</h2><p>{{ t('landing.categories.description',profiles=stats.profiles,categories=stats.categories) }}</p></div>
-  <div class="tl-category-list">{% for category in categories %}<a class="tl-category" href="/app?category={{ category.name|urlencode }}"><span>{{ label('category',category.name) }}</span><span class="tl-category-count">{{ category.total }}</span>{{ icon('arrow') }}</a>{% endfor %}</div>
-  <div class="tl-catalog-note"><p>{{ t('landing.categories.note',synthetic=stats.synthetic) }}</p><p>{{ t('landing.categories.abroad') }}</p><p>{{ t('landing.hero.stats',profiles=stats.profiles,categories=stats.categories,cities=stats.cities,days=stats.days) }}</p></div>
-</section>
-<section class="tl-principle">
-  <div class="tl-container"><p class="tl-eyebrow">{{ t('landing.principle.eyebrow') }}</p><div class="tl-principle-grid"><h2>{{ t('landing.principle.title') }}</h2><p>{{ t('landing.principle.text') }}</p></div>
-    <ul class="tl-outcomes">{% for code,glyph in [('found','check'),('nocat','location'),('none','info')] %}<li class="tl-outcome tl-outcome--{{ code }}">{{ icon(glyph) }}<p>{{ t('landing.honesty.' ~ code) }}</p></li>{% endfor %}</ul>
-    <div class="tl-principle-labels">{% for key in ['price','flags','explanation'] %}<span>{{ icon('check') }}{{ t('landing.principle.' ~ key) }}</span>{% endfor %}</div>
+
+<section class="tl-section tl-container tl-categories-section" id="categories" aria-labelledby="categories-heading" data-catalog>
+  <div class="tl-section-heading">
+    <p class="tl-eyebrow">{{ t('landing.catalog.eyebrow') }}</p>
+    <h2 id="categories-heading" tabindex="-1">{{ t('landing.catalog.title') }}</h2>
+    <p>{{ t('landing.catalog.description') }}</p>
+    {{ accent('tandau-venue', 640, 480) }}
+  </div>
+  <div class="tl-catalog-body">
+    <fieldset class="tl-segmented" data-catalog-switch hidden>
+      <legend>{{ t('landing.catalog.switch') }}</legend>
+      <div>
+        <label><input type="radio" name="catalog_city" value=""{% if not catalog_city %} checked{% endif %}><span>{{ t('landing.catalog.all') }}</span></label>
+        {% for value in meta.cities %}<label><input type="radio" name="catalog_city" value="{{ value }}"{% if catalog_city == value %} checked{% endif %}><span>{{ label('city', value) }}</span></label>{% endfor %}
+      </div>
+    </fieldset>
+    <p class="tl-catalog-caption" data-catalog-caption>{{ t('landing.catalog.caption_city', city=label('city', catalog_city)) if catalog_city else t('landing.catalog.caption_all') }}</p>
+    <ul class="tl-category-list">
+      {% for row in categories %}
+      {% set n = row.by_city.get(catalog_city, 0) if catalog_city else row.total %}
+      <li><a class="tl-category" href="/?{{ brief.query(category=row.name) }}#brief-category" data-category="{{ row.name }}">
+        <span class="tl-category-name"><span>{{ label('category', row.name) }}</span><small data-zero{% if n %} hidden{% endif %}>{{ t('landing.catalog.zero') }}</small></span>
+        <span class="tl-category-count" data-count>{{ n }}</span>{{ icon('arrow') }}
+      </a></li>
+      {% endfor %}
+    </ul>
+    <p class="tl-catalog-note">{{ t('landing.catalog.note') }}</p>
   </div>
 </section>
-<section class="tl-section tl-container tl-faq-section" id="faq"><div class="tl-section-heading"><p class="tl-eyebrow">{{ t('landing.faq.title') }}</p><h2>{{ t('landing.faq.subtitle') }}</h2></div><div class="tl-faq">{% for n in [1,2,3,4] %}<details><summary>{{ t('landing.faq.q' ~ n) }}<span aria-hidden="true">+</span></summary><p>{{ t('landing.faq.a' ~ n,profiles=stats.profiles,synthetic=stats.synthetic) }}</p></details>{% endfor %}</div></section>
-<section class="tl-final tl-container"><h2>{{ t('landing.final.title') }}</h2><a class="tl-button" href="/app">{{ t('landing.final.action') }} {{ icon('arrow') }}</a></section>
-<div class="tl-toast" id="sample-status" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<section class="tl-limits" aria-labelledby="limits-heading">
+  <div class="tl-container">
+    <div class="tl-limits-grid">
+      <div><p class="tl-eyebrow">{{ t('landing.limits.eyebrow') }}</p><h2 id="limits-heading">{{ t('landing.limits.title') }}</h2></div>
+      <ul class="tl-limits-list">
+        <li>{{ icon('info') }}<p>{{ t('landing.limits.anonymized') }}</p></li>
+        <li>{{ icon('info') }}<p>{{ t('landing.limits.synthetic', synthetic=stats.synthetic, price_imputed=stats.price_imputed, city_imputed=stats.city_imputed) }}</p></li>
+        <li>{{ icon('info') }}<p>{{ t('landing.limits.confirm') }}</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="tl-section tl-container tl-faq-section" id="faq" aria-labelledby="faq-heading">
+  <div class="tl-section-heading"><p class="tl-eyebrow">{{ t('landing.faq.eyebrow') }}</p><h2 id="faq-heading" tabindex="-1">{{ t('landing.faq.title') }}</h2></div>
+  <div class="tl-faq">
+    {% for n in range(1, 8) %}<details><summary>{{ t('landing.faq.q' ~ n) }}<span aria-hidden="true"></span></summary><p>{{ t('landing.faq.a' ~ n, profiles=stats.profiles, synthetic=stats.synthetic, price_imputed=stats.price_imputed, city_imputed=stats.city_imputed) }}</p></details>{% endfor %}
+  </div>
+</section>
+
+<section class="tl-final" aria-labelledby="final-heading">
+  <div class="tl-container tl-final-inner">
+    <h2 id="final-heading">{{ t('landing.final.title') }}</h2>
+    <a class="tl-button tl-button--on-dark" href="#brief">{{ t('landing.final.action') }} {{ icon('arrow') }}</a>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="application/json" id="brief-config">{{ client_config|tojson }}</script>
+<script src="{{ static_url('js/brief.js') }}" defer></script>
 {% endblock %}

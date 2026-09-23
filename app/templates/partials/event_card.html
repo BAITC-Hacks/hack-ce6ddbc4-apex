@@ -1,0 +1,28 @@
+{#- Live summary of the visitor's own five conditions. Only valid values fill it. -#}
+{% set city = brief['city'] %}{% set when = brief['date'] %}{% set kind = brief['event_type'] %}{% set need = brief['category'] %}{% set budget = brief['budget'] %}
+{% set d = date_parts(when.value) if when.valid else None %}
+<aside class="tl-event-board" aria-labelledby="event-card-title" data-event-card>
+  <div class="tl-board-top">
+    <span id="event-card-title">{{ t('landing.event_card.title') }}</span>
+    <span class="tl-card-value{% if not city.valid %} is-empty{% endif %}" data-card-field="city">{{ label('city', city.value) if city.valid else t('landing.event_card.city_empty') }}</span>
+  </div>
+  <div class="tl-event-date{% if not d %} is-empty{% endif %}" data-card-date>
+    <span class="tl-event-day-number" data-card-part="day"{% if not d %} hidden{% endif %}>{{ d.day if d }}</span>
+    <div class="tl-event-month"><span data-card-part="month">{{ d.month if d else t('landing.event_card.date_empty') }}</span><strong data-card-part="year">{{ d.year if d }}</strong></div>
+    <span class="tl-event-day" data-card-part="weekday">{{ d.weekday if d }}</span>
+  </div>
+  <div class="tl-event-title">
+    <span class="tl-card-kind{% if not kind.valid %} is-empty{% endif %}" data-card-field="event_type">{{ label('format', kind.value)|capitalize if kind.valid else t('landing.event_card.event_type_empty') }}</span>
+    <p class="tl-card-need{% if not need.valid %} is-empty{% endif %}" data-card-field="category">{{ label('category', need.value) if need.valid else t('landing.event_card.category_empty') }}</p>
+  </div>
+  <div class="tl-board-rule" aria-hidden="true"></div>
+  <div class="tl-event-budget">
+    <span>{{ t('landing.event_card.budget_label') }}</span>
+    <strong class="tl-card-value{% if not budget.valid %} is-empty{% endif %}" data-card-field="budget">{{ t('landing.event_card.budget_value', amount=budget.value|kzt) if budget.valid else t('landing.event_card.budget_empty') }}</strong>
+  </div>
+  <div class="tl-board-progress">
+    <span data-card-progress>{{ t('landing.event_card.progress', n=brief.filled) }}</span>
+    <span class="tl-progress-track" aria-hidden="true">{% for n in range(5) %}<i{% if n < brief.filled %} class="is-on"{% endif %}></i>{% endfor %}</span>
+  </div>
+  <p class="tl-board-note">{{ t('landing.event_card.note') }}</p>
+</aside>

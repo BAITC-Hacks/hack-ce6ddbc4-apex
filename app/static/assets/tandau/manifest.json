@@ -401,5 +401,392 @@
     "view_box": "0 0 24 24",
     "stroke_width": 1.5,
     "sha256": "9e224e61d1f0554224ae627e94bf872318231990b2689c11fdc616359360e28a"
-  }
+  },
+  "received_assets": [
+    {
+      "id": "tandau-production-desk",
+      "status": "revision_requested",
+      "original_file": "tandau-production-desk.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Visible third-party trademarks (SONY, RØDE) and printed text TANDAU PRODUCTION BRIEFING; brief requires no text or foreign logos.",
+      "original_sha256": "45a559f9497c9e2605a3d31bdf8a67b85d24bbe08a88efbd1c3b0b35a591393e",
+      "width": 1672,
+      "height": 941,
+      "format": "PNG RGB",
+      "alpha": false
+    },
+    {
+      "id": "tandau-microphone",
+      "status": "approved",
+      "original_file": "tandau-microphone.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Clean object, no text. Opaque light background, not RGBA as briefed; framed as a rectangular accent.",
+      "original_sha256": "52984dfc3864ac34462bb4a418dbba67d93bda869a828912d7db2c6b006ebb15",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-microphone-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "914210e8f287af9fb762d1c466c94cfc10f7ecead096061d95205e2f28290f23"
+        },
+        {
+          "file": "img/tandau-microphone-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "ee93d184c49c9db1f926218c7fc9ab1c406582a997d04b3fb3a457252d87f52c"
+        }
+      ],
+      "alt": "",
+      "usage": "Accepted for later phases; not placed in Phase 1 pages (one accent per section).",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-camera",
+      "status": "approved",
+      "original_file": "tandau-camera.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Desk scene with camera, light, microphone and folder; no readable brand. Opaque background.",
+      "original_sha256": "8cb7107e5b2269e25e16ff2863b17301974a22fb79c51c0234b3124f29e9be64",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-camera-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "e784e2c997bee9383ef4f3f646af98488237333f03b3823fae4f0e593a0845ee"
+        },
+        {
+          "file": "img/tandau-camera-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "0b17a87e2cdac1a4ca92266c847a4afb4e44a4afdf4f72ae6ae9ab8b33bb63af"
+        }
+      ],
+      "alt": "",
+      "usage": "Accepted for later phases; not placed in Phase 1 pages (one accent per section).",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-video-camera",
+      "status": "revision_requested",
+      "original_file": "tandau-video-camera.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "RED KOMODO 6K and Canon branding on the body and lens.",
+      "original_sha256": "1c740d05ecde971141ba5c9339b3f8c4c5bd0db0fe053013744604b4adda10fe",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false
+    },
+    {
+      "id": "tandau-stage-light",
+      "status": "revision_requested",
+      "original_file": "tandau-stage-light.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Depicts a cinema camera, not stage lighting; HDMI and USB-C labels. Subject does not match the brief.",
+      "original_sha256": "b5c36fb4f6fda9fab6bd54831c05cb8a9409232cfe210884c8f9083d09179e2f",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false
+    },
+    {
+      "id": "tandau-venue",
+      "status": "integrated",
+      "original_file": "tandau-venue.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Empty event hall, no text.",
+      "original_sha256": "40e85ac08fce53ea59737f32b29f78e661d72df2d18bc6a1f7397e1f9824a34a",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-venue-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "c28411bf6b72578c2d45636107f582846f2920e57fe25545706ebda9a8a54497"
+        },
+        {
+          "file": "img/tandau-venue-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "7fed46ded5d7c13a37ecb25bf930dc5191e41add764b47e771f12f615165abf5"
+        }
+      ],
+      "alt": "",
+      "usage": "Landing catalogue by location (#categories), decorative accent",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-floral-arrangement",
+      "status": "approved",
+      "original_file": "tandau-floral-arrangement.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Calla lilies in black vase, no text.",
+      "original_sha256": "1c1f5a093d6facc62144e41be24d6020e61417bc0aaae9a984633316005aaf75",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-floral-arrangement-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "22f56a9a95c09bbeb665922776346b266157521429ccc98b4887111712b0a1ab"
+        },
+        {
+          "file": "img/tandau-floral-arrangement-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "d7ebfbf6929b91e4268d80a95bef0a059ebea965ea62dc3d5560ae3a7d3a40de"
+        }
+      ],
+      "alt": "",
+      "usage": "Accepted for later phases; not placed in Phase 1 pages (one accent per section).",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-calendar",
+      "status": "approved",
+      "original_file": "tandau-calendar.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Blank desk calendar with one blue day; carries no dates, never replaces catalogue calendar data.",
+      "original_sha256": "09dbab2850cc70e86161ec5423384526eaad7740bdc88db912e2df2b186b66a0",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-calendar-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "6d71387194029a2a85753d302d1b97bd3f0af8a9637cfaff23c4655df9f7d5c0"
+        },
+        {
+          "file": "img/tandau-calendar-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "8f92f658c298664de309e6a78df2efd979d3845ba1a31d703f92f09fb5888dd8"
+        }
+      ],
+      "alt": "",
+      "usage": "Accepted for later phases; not placed in Phase 1 pages (one accent per section).",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-budget",
+      "status": "approved",
+      "original_file": "tandau-budget.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Calculator with blank display, no text.",
+      "original_sha256": "d89e076d17f94cac03a13ae077fc66ed2a399bf7212845f4e8ebc36545462e31",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-budget-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "f588080ae2bca722df97b0998267a2edf0011c75adcad7b2515c516903fbcc39"
+        },
+        {
+          "file": "img/tandau-budget-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "88f853675d162c20f580d36ba2fe363fafda88495b2be3cbfdcee783b618a5b7"
+        }
+      ],
+      "alt": "",
+      "usage": "Accepted for later phases; not placed in Phase 1 pages (one accent per section).",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-shortlist",
+      "status": "approved",
+      "original_file": "tandau-shortlist.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Three blank cards with binder clip and blue tab.",
+      "original_sha256": "a6f009ae98e16721a8958d65ea8aa081880e8e26d38db4ce2391df53a76d47d2",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-shortlist-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "eb42185fc4c6e50e3ee4bd0bbc02edd00bbe0564aaacbd9ec26e26653d857b2e"
+        },
+        {
+          "file": "img/tandau-shortlist-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "fdaf28d095faea1ef8c32ced1b39cad733a159c05296efc7f80e51b152b1bb01"
+        }
+      ],
+      "alt": "",
+      "usage": "Accepted for later phases; not placed in Phase 1 pages (one accent per section).",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-comparison",
+      "status": "pending",
+      "original_file": "",
+      "source": "",
+      "received_at": "",
+      "review_notes": "Not received."
+    },
+    {
+      "id": "tandau-brief",
+      "status": "integrated",
+      "original_file": "tandau-brief.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Clipboard with blank sheet and blue pencil.",
+      "original_sha256": "8f25faef2b46f96c11550759b431d921da16d8c276b6e6218f46d4e7cd9e2a31",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-brief-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "5f1de725a2815dc0be22c829cc4557c0d66e611903c380f7a85b86d1210c10b7"
+        },
+        {
+          "file": "img/tandau-brief-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "1d86b483e7f7f247f4b57effc0b287a7bd0d6388bb7cbcabc4f44296873c2522"
+        }
+      ],
+      "alt": "",
+      "usage": "Landing «Как устроен подбор» (#how), decorative accent",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-complete",
+      "status": "integrated",
+      "original_file": "tandau-complete.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Black check mark with blue detail; used only for a locally complete brief, not a booking confirmation.",
+      "original_sha256": "938c5ca9165d7e88062e809fa5ab4ac596c008c7915d23fe74275a4bfaff0c06",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-complete-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "0cf2ca58aa5e3a4be262075a2485413fe27173e30ec86aa668d6b2fef51dd362"
+        },
+        {
+          "file": "img/tandau-complete-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "1e122b4ec8deb9400a0a9f3e756ddeb2aefd269ac0ba45ce467d37eb9cb0a98c"
+        }
+      ],
+      "alt": "",
+      "usage": "/app ready state, decorative accent",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-open-folder",
+      "status": "integrated",
+      "original_file": "tandau-keycard.png.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Received under the name tandau-keycard.png.png, but the picture is the open folder of brief 14. Registered by content as tandau-open-folder.",
+      "original_sha256": "c3a937cb4ec48a59326d9f824f461a45f1dd964f0600d731c705d0c293446f37",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-open-folder-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "97913aba7ee07852a22d4cb7f622bcffb66c655fc4da1cb39ef43ed79c3f5596"
+        },
+        {
+          "file": "img/tandau-open-folder-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "fa62230fc3e79fcc97d983cc467d32cdd56f4e945cdec51692e81da115b70713"
+        }
+      ],
+      "alt": "",
+      "usage": "/app empty state, decorative accent",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    },
+    {
+      "id": "tandau-keycard",
+      "status": "pending",
+      "original_file": "",
+      "source": "",
+      "received_at": "",
+      "review_notes": "No keycard image received; the file named keycard shows the open folder."
+    },
+    {
+      "id": "tandau-choice-tray",
+      "status": "integrated",
+      "original_file": "tandau-choice-tray.png",
+      "source": "Provided by the user in ~/Downloads/assets on 2026-09-23",
+      "received_at": "2026-09-23",
+      "review_notes": "Three-slot tray with one raised tile and blue edge.",
+      "original_sha256": "c9ae26bba6f6f314da598746a34a96fc205cf7d7dd3db7a9e9de8565a8e619af",
+      "width": 1448,
+      "height": 1086,
+      "format": "PNG RGB",
+      "alpha": false,
+      "web_files": [
+        {
+          "file": "img/tandau-choice-tray-1200.jpg",
+          "width": 1200,
+          "height": 900,
+          "sha256": "afdc0e6c2040c281a009abc8f25390ab0facb901cb351c25ddb04ba8a5ec22d6"
+        },
+        {
+          "file": "img/tandau-choice-tray-640.jpg",
+          "width": 640,
+          "height": 480,
+          "sha256": "da4d113d8f1cd124dbbca4c29f66716a1a016320c593ddbdf35f43dfbbb64c91"
+        }
+      ],
+      "alt": "",
+      "usage": "Landing «Пример подбора» (#example), decorative accent",
+      "crop": "4:3 object-fit cover; checked at 360, 768 and 1440 px"
+    }
+  ]
 }

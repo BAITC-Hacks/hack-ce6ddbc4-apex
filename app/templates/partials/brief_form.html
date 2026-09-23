@@ -1,0 +1,139 @@
+{% from 'partials/icons.html' import icon %}
+{#- Five required conditions. The form works as a plain GET without JavaScript. -#}
+{% set form = brief.form_values() %}
+{% set fmt_icons = {'свадьба': 'format-wedding', 'той': 'format-toi', 'корпоратив': 'format-corporate', 'конференция': 'format-conference', 'юбилей': 'format-jubilee', 'день рождения': 'format-birthday'} %}
+{% macro field_error(name) -%}
+{% set item = brief[name] %}
+<p class="tl-field-error" id="brief-{{ name }}-error" data-error-for="{{ name }}"{% if item.error %} data-error-key="{{ item.error }}"{% else %} hidden{% endif %}>{{ icon('info') }}<span>{{ t(item.error) if item.error }}</span></p>
+{%- endmacro %}
+{% macro invalid(name) %}{% if brief[name].error %} aria-invalid="true"{% endif %}{% endmacro %}
+<section class="tl-brief-wrap" id="brief" aria-labelledby="brief-heading">
+  <div class="tl-container">
+    <div class="tl-brief-heading">
+      <div>
+        <h2 id="brief-heading" tabindex="-1">{{ t('brief.title') }}</h2>
+        <p>{{ t('brief.subtitle') }}</p>
+      </div>
+      <p class="tl-brief-required">{{ t('brief.required') }}</p>
+    </div>
+    <div class="tl-draft-status" data-draft-status hidden>
+      {{ icon('check') }}<p data-draft-text>{{ t('brief.draft.restored') }}</p>
+      <button type="button" class="tl-text-button" data-brief-clear>{{ t('brief.clear') }}</button>
+    </div>
+    <div class="tl-error-summary" id="brief-errors" tabindex="-1" aria-labelledby="brief-errors-title" data-error-summary{% if not brief.invalid %} hidden{% endif %}>
+      <p class="tl-error-title" id="brief-errors-title">{{ icon('info') }}<span data-error-title>{{ t('brief.errors.title') }}</span></p>
+      <ul data-error-list>
+        {% for item in brief.invalid %}<li><a href="#brief-{{ item.name }}" data-error-link="{{ item.name }}">{{ t('brief.' ~ item.name ~ '.label') }}. {{ t(item.error) }}</a></li>{% endfor %}
+      </ul>
+    </div>
+    <form class="tl-brief" id="brief-form" action="/app" method="get" novalidate autocomplete="off" data-brief-form>
+      <div class="tl-brief-row tl-brief-row--first">
+        <fieldset class="tl-field tl-field--city" id="brief-city">
+          <legend class="tl-field-label"><span class="tl-step" aria-hidden="true">01</span>{{ t('brief.city.label') }}</legend>
+          <div class="tl-city-options">
+            {% for value in meta.cities %}
+            <label class="tl-city-option">
+              <input type="radio" name="city" value="{{ value }}" required aria-describedby="brief-city-error"{% if form.city == value %} checked{% endif %}{{ invalid('city') }}>
+              <span class="tl-city-face">{{ icon('location') }}<strong>{{ label('city', value) }}</strong><small>{{ t('brief.city.kind_abroad' if value == 'Зарубежье' else 'brief.city.kind_city') }}</small><small>{{ t('brief.city.count', n=city_totals[value]) }}</small><i aria-hidden="true"></i></span>
+            </label>
+            {% endfor %}
+          </div>
+          {{ field_error('city') }}
+        </fieldset>
+
+        {% set d = date_parts(brief['date'].value) if brief['date'].valid else None %}
+        {% set window_start = date_parts(meta.window.start) %}{% set window_end = date_parts(meta.window.end) %}
+        <div class="tl-field tl-field--date">
+          <label class="tl-field-label" for="brief-date"><span class="tl-step" aria-hidden="true">02</span>{{ t('brief.date.label') }}</label>
+          <div class="tl-date-control">
+            <span class="tl-date-stamp{% if not d %} is-empty{% endif %}" aria-hidden="true" data-date-stamp><strong data-stamp-day>{{ d.day if d }}</strong><small data-stamp-month>{{ d.month_short if d }}</small>{{ icon('calendar') }}</span>
+            <input type="date" id="brief-date" name="date" value="{{ form.date }}" min="{{ meta.window.start }}" max="{{ meta.window.end }}" required aria-describedby="brief-date-help brief-date-error"{{ invalid('date') }}>
+          </div>
+          <p class="tl-field-help" id="brief-date-help">{{ t('brief.date.help', start=window_start.day_month, end=window_end.full) }}</p>
+          {{ field_error('date') }}
+        </div>
+
+        <fieldset class="tl-field tl-field--format" id="brief-event_type">
+          <legend class="tl-field-label"><span class="tl-step" aria-hidden="true">03</span>{{ t('brief.event_type.label') }}</legend>
+          <div class="tl-format-options">
+            {% for value in meta.event_formats %}
+            <label class="tl-format-option">
+              <input type="radio" name="event_type" value="{{ value }}" required aria-describedby="brief-event_type-error"{% if form.event_type == value %} checked{% endif %}{{ invalid('event_type') }}>
+              <span>{{ icon(fmt_icons.get(value, 'grid')) }}<strong>{{ label('format', value)|capitalize }}</strong><small>{{ t('brief.event_type.hint.' ~ value) }}</small></span>
+            </label>
+            {% endfor %}
+          </div>
+          {{ field_error('event_type') }}
+        </fieldset>
+      </div>
+
+      <div class="tl-brief-row tl-brief-row--second">
+        {% set category = brief['category'] %}{% set city = brief['city'] %}
+        <div class="tl-field tl-field--category">
+          <label class="tl-field-label" for="brief-category"><span class="tl-step" aria-hidden="true">04</span>{{ t('brief.category.label') }}</label>
+          <div class="tl-service-select">
+            {{ icon('account') }}
+            <select id="brief-category" name="category" required aria-describedby="brief-category-help brief-category-error"{{ invalid('category') }}>
+              <option value=""{% if not category.valid %} selected{% endif %}>{{ t('brief.category.placeholder') }}</option>
+              {% for row in categories %}<option value="{{ row.name }}"{% if category.valid and category.value == row.name %} selected{% endif %}>{{ label('category', row.name) }}</option>{% endfor %}
+            </select>
+            <span class="tl-select-caret" aria-hidden="true">{{ icon('arrow') }}</span>
+          </div>
+          <p class="tl-field-help" id="brief-category-help" data-coverage>
+            {%- if category.valid and city.valid -%}
+              {%- set n = (categories|selectattr('name', 'equalto', category.value)|first).by_city.get(city.value, 0) -%}
+              {{ t('brief.category.coverage', n=n) if n else t('brief.category.coverage_zero') }}
+            {%- elif category.valid -%}
+              {{ t('brief.category.coverage_city') }}
+            {%- else -%}
+              {{ t('brief.category.help_empty', n=categories|length) }}
+            {%- endif -%}
+          </p>
+          {{ field_error('category') }}
+        </div>
+
+        {% set budget = brief['budget'] %}
+        <div class="tl-field tl-field--budget">
+          <div class="tl-field-heading">
+            <label class="tl-field-label" for="brief-budget"><span class="tl-step" aria-hidden="true">05</span>{{ t('brief.budget.label') }}</label>
+            <span>{{ t('brief.budget.scope') }}</span>
+          </div>
+          <div class="tl-budget-control">
+            <input type="text" id="brief-budget" name="budget" inputmode="numeric" spellcheck="false" autocomplete="off" placeholder="{{ t('brief.budget.placeholder') }}" value="{{ budget.value|digits if budget.valid else form.budget }}" required aria-describedby="brief-budget-help brief-budget-error"{{ invalid('budget') }}>
+            <span aria-hidden="true">₸</span>
+          </div>
+          <div class="tl-budget-presets" role="group" aria-label="{{ t('brief.budget.presets') }}" data-budget-presets hidden>
+            {% for amount in budget_presets %}<button type="button" data-budget="{{ amount }}" aria-pressed="{{ 'true' if budget.valid and budget.value == amount else 'false' }}">{{ amount|kzt }}</button>{% endfor %}
+          </div>
+          <p class="tl-field-help" id="brief-budget-help">{{ t('brief.budget.help') }}</p>
+          {{ field_error('budget') }}
+        </div>
+      </div>
+
+      <div class="tl-brief-actions">
+        <button type="submit" class="tl-button" data-brief-submit>{{ t('brief.continue') }} {{ icon('arrow') }}</button>
+        <button type="button" class="tl-text-button" data-brief-example hidden>{{ icon('copy') }}{{ t('brief.example') }}</button>
+        <button type="button" class="tl-text-button" data-brief-clear hidden>{{ icon('close') }}{{ t('brief.clear') }}</button>
+      </div>
+      <p class="tl-brief-message" role="status" data-brief-message></p>
+      <p class="tl-brief-note" data-storage-note hidden>{{ icon('info') }}<span>{{ t('brief.draft.unavailable') }}</span></p>
+      <noscript><p class="tl-brief-message">{{ t('brief.noscript') }}</p></noscript>
+    </form>
+    <p class="visually-hidden" aria-live="polite" data-card-announce></p>
+  </div>
+</section>
+
+<dialog class="tl-dialog" id="replace-dialog" aria-labelledby="replace-title" aria-describedby="replace-text">
+  <form method="dialog">
+    <h2 id="replace-title">{{ t('brief.replace.title') }}</h2>
+    <p id="replace-text">{{ t('brief.replace.text') }}</p>
+    <div class="tl-dialog-actions"><button class="tl-button" value="confirm">{{ t('brief.replace.confirm') }}</button><button class="tl-button tl-button--secondary" value="cancel" autofocus>{{ t('brief.replace.cancel') }}</button></div>
+  </form>
+</dialog>
+<dialog class="tl-dialog" id="clear-dialog" aria-labelledby="clear-title" aria-describedby="clear-text">
+  <form method="dialog">
+    <h2 id="clear-title">{{ t('brief.clear.title') }}</h2>
+    <p id="clear-text">{{ t('brief.clear.text') }}</p>
+    <div class="tl-dialog-actions"><button class="tl-button" value="confirm">{{ t('brief.clear.confirm') }}</button><button class="tl-button tl-button--secondary" value="cancel" autofocus>{{ t('brief.clear.cancel') }}</button></div>
+  </form>
+</dialog>

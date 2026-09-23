@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "partials/icons.html" import icon %}
-{% block title %}{{ t('auth.preview.register_title' if request.url.path == '/register' else 'auth.preview.login_title') if placeholder_kind == 'auth' else t('search.preview.title') }} — Tandau{% endblock %}
+{% block title %}{{ t('auth.preview.register_title' if request.url.path == '/register' else 'auth.preview.login_title') }} · Tandau{% endblock %}
 {% block content %}
 {% if placeholder_kind == 'auth' %}
 <section class="tl-container account-preview" aria-labelledby="account-title">
@@ -20,90 +20,8 @@
     <h1 id="account-title">{{ t('auth.preview.register_title' if request.url.path == '/register' else 'auth.preview.login_title') }}</h1>
     <p class="account-panel-notice">{{ t('auth.preview.notice') }}</p>
     <p class="account-panel-description">{{ t('auth.preview.description') }}</p>
-    <a class="tl-button" href="/app">{{ t('auth.preview.guest') }}{{ icon('arrow') }}</a>
+    <a class="tl-button" href="/#brief">{{ t('auth.preview.guest') }} {{ icon('arrow') }}</a>
     <a class="account-home" href="/">{{ t('auth.preview.home') }}</a>
-  </div>
-</section>
-{% else %}
-{% set query = request.query_params %}
-<section class="search-preview tl-container" aria-labelledby="search-title">
-  <header class="search-page-heading">
-    <p class="tl-eyebrow">{{ t('search.preview.kicker') }}</p>
-    <h1 id="search-title">{{ t('search.preview.title') }}</h1>
-    <p>{{ t('search.preview.description') }}</p>
-  </header>
-  <div class="preview-notice" id="search-preview-notice">{{ icon('info') }}<p>{{ t('search.preview.notice') }}</p></div>
-  <div class="search-layout">
-    <div class="form-card search-fields" aria-describedby="search-preview-notice">
-      <fieldset class="field-block">
-        <legend>{{ t('search.preview.city') }}</legend>
-        <div class="city-options">
-          {% for city in meta.cities %}
-          <label class="city-option">
-            <input type="radio" name="city" value="{{ city }}" {{ 'checked' if city == query.get('city', 'Алматы') else '' }}>
-            <span class="city-option-face">{{ icon('location') }}<strong>{{ t('data.city.' ~ city) }}</strong><small>{{ t('search.preview.abroad_label' if city == 'Зарубежье' else 'search.preview.city_label') }}</small><i aria-hidden="true"></i></span>
-          </label>
-          {% endfor %}
-        </div>
-      </fieldset>
-      <fieldset class="field-block">
-        <legend>{{ t('search.preview.format') }}</legend>
-        <div class="format-options">
-          {% for event_format in meta.event_formats %}
-          <label><input type="radio" name="event_type" value="{{ event_format }}" {{ 'checked' if event_format == query.get('event_type', 'свадьба') else '' }}><span>{{ t('data.format.' ~ event_format)|capitalize }}</span></label>
-          {% endfor %}
-        </div>
-      </fieldset>
-      <div class="form-pair">
-        <div class="field-block">
-          <label class="field-legend" for="search-category">{{ t('search.preview.category') }}</label>
-          <div class="service-select">{{ icon('account') }}<select id="search-category" name="category" aria-describedby="category-help">
-            {% for category in meta.categories %}<option value="{{ category.name }}" {{ 'selected' if category.name == query.get('category', 'Ведущий') else '' }}>{{ t('data.category.' ~ category.name) }}</option>{% endfor %}
-          </select></div>
-          <p class="field-help" id="category-help">{{ t('search.preview.category_hint', n=meta.categories|length) }}</p>
-        </div>
-        <div class="field-block">
-          <label class="field-legend" for="search-date">{{ t('search.preview.date') }}</label>
-          <div class="date-control">{{ icon('calendar') }}<input type="date" id="search-date" name="date" value="{{ query.get('date', '2026-10-17') }}" min="{{ meta.window.start }}" max="{{ meta.window.end }}" aria-describedby="date-help"></div>
-          <p class="field-help" id="date-help">{{ t('search.preview.date_hint') }}</p>
-        </div>
-      </div>
-      <div class="field-block budget-block">
-        <div class="field-heading"><label class="field-legend" for="search-budget">{{ t('search.preview.budget') }}</label><span>{{ t('search.preview.starting_price') }}</span></div>
-        <div class="budget-control"><input id="search-budget" type="number" inputmode="numeric" name="budget_kzt" min="1" step="1" value="{{ query.get('budget_kzt', query.get('budget', '1000000')) }}" aria-describedby="budget-help"><span aria-hidden="true">₸</span></div>
-        <p class="field-help" id="budget-help">{{ t('search.preview.budget_hint') }}</p>
-      </div>
-      <div class="form-pair">
-        <div class="field-block">
-          <div class="field-heading"><label class="field-legend" for="search-duration">{{ t('search.preview.duration') }}</label><span>{{ t('search.preview.optional') }}</span></div>
-          <div class="duration-control">{{ icon('clock') }}<input id="search-duration" type="number" name="duration_h" min="1" max="24" step="1" value="{{ query.get('duration_h', query.get('duration', '')) }}" placeholder="{{ t('search.preview.any_duration') }}"><span>{{ t('search.preview.hours') }}</span></div>
-        </div>
-        <fieldset class="field-block">
-          <legend>{{ t('search.preview.language') }}</legend>
-          <div class="language-options">
-            <label><input type="radio" name="language" value="" {{ 'checked' if not query.get('language') else '' }}><span>{{ t('search.preview.any_language') }}</span></label>
-            {% for language in meta.languages %}<label><input type="radio" name="language" value="{{ language }}" {{ 'checked' if language == query.get('language') else '' }}><span>{{ t('data.language.' ~ language)|capitalize }}</span></label>{% endfor %}
-          </div>
-        </fieldset>
-      </div>
-      <div class="field-block">
-        <div class="field-heading"><label class="field-legend" for="search-wishes">{{ t('search.preview.wishes') }}</label><span>{{ t('search.preview.optional') }}</span></div>
-        <textarea class="field__control wishes-control" id="search-wishes" name="wishes" rows="4" maxlength="500" placeholder="{{ t('search.preview.wishes_placeholder') }}" aria-describedby="wishes-help">{{ query.get('wishes', '') }}</textarea>
-        <p class="field-help" id="wishes-help">{{ t('search.preview.wishes_hint') }}</p>
-      </div>
-    </div>
-    <aside class="search-intro">
-      <p class="tl-eyebrow">{{ t('search.preview.aside_kicker') }}</p>
-      <h2>{{ t('search.preview.aside_title') }}</h2>
-      <p class="search-intro-description">{{ t('search.preview.aside_text') }}</p>
-      <ul>
-        <li>{{ icon('calendar') }}<span>{{ t('search.preview.aside_point1') }}</span></li>
-        <li>{{ icon('info') }}<span>{{ t('search.preview.aside_point2') }}</span></li>
-        <li>{{ icon('filter') }}<span>{{ t('search.preview.aside_point3') }}</span></li>
-      </ul>
-      <button class="tl-button" type="button" disabled aria-describedby="search-unavailable">{{ t('search.preview.submit') }}</button>
-      <p class="field-help" id="search-unavailable">{{ t('search.preview.submit_hint') }}</p>
-    </aside>
   </div>
 </section>
 {% endif %}

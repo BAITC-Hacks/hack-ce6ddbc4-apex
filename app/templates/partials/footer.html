@@ -1,10 +1,12 @@
+{% set home = '' if path == '/' else '/' %}
 <footer class="tl-footer">
   <div class="tl-container">
     <div class="tl-footer-top">
-      <a class="tl-wordmark" href="/" aria-label="Tandau">{{ wordmark() }}</a>
+      <a class="tl-wordmark" href="/" aria-label="{{ t('nav.home') }}">{{ wordmark() }}</a>
       <p>{{ t('footer.tagline') }}</p>
-      <nav aria-label="{{ t('nav.footer') }}"><a href="/#how">{{ t('nav.how') }}</a><a href="/#categories">{{ t('nav.categories') }}</a><a href="/#faq">{{ t('nav.questions') }}</a><a href="/designbook">{{ t('nav.designbook') }}</a></nav>
+      <nav aria-label="{{ t('nav.footer') }}"><a href="{{ home }}#categories">{{ t('nav.categories') }}</a><a href="{{ home }}#example">{{ t('nav.example') }}</a><a href="{{ home }}#faq">{{ t('nav.questions') }}</a></nav>
     </div>
-    <div class="tl-footer-bottom"><span>{{ t('footer.text') }}</span><a href="/docs">{{ t('footer.api') }}</a><a href="#main">{{ t('footer.top') }} ↑</a></div>
+    <div class="tl-footer-review"><span>{{ t('footer.review') }}</span><a href="/docs">{{ t('footer.api') }}</a><a href="/designbook">{{ t('nav.designbook') }}</a></div>
+    <div class="tl-footer-bottom"><span>{{ t('footer.text') }}</span><a href="#main">{{ t('footer.top') }} <span aria-hidden="true">↑</span></a></div>
   </div>
 </footer>
