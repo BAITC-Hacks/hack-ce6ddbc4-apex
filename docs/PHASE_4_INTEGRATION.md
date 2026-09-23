@@ -47,8 +47,8 @@
 
 ## 4. Соединение с фазами 2–3 (аккаунты)
 
-- `app/search.py` импортирует `get_current_user` из `app/deps.py`, а пока файла нет — берёт `request.state.user`. После слияния шим можно удалить.
-- `app/search.html` включает `partials/guest_banner.html` с `ignore missing` первой строкой контента — плашка фазы 3 появится сама. После слияния вернуть проверку `guest-banner` в тест `/app`.
+- `app/search.py` берёт пользователя из `app.web.resolve_user` (фаза 2), иначе из `app.deps.current_user` (фаза 3), иначе из `request.state.user`. После слияния сработает первый вариант, правок не нужно.
+- `app/search.html` включает `partials/guest_banner.html` с `ignore missing` первой строкой контента — плашка фазы 3 (ветка `claude/phase-3-implementation-a1bf11`) появится сама; её ссылка входа возвращает на тот же `/app` с условиями и `demo`, без `wishes`. После слияния вернуть проверку `guest-banner` в `test_app_form_without_params`.
 - Вошедшему без `city` в query форма подставляет `preferred_city` уже после подбора: ссылка на выдачу воспроизводима у гостя и у вошедшего.
 
 ## 5. Для фаз 5–6

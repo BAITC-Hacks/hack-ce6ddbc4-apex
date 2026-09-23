@@ -19,8 +19,8 @@ from .i18n import get_lang, translate
 try:  # Phase 2: signed-in user from the session
     from .web import resolve_user as get_current_user  # type: ignore[attr-defined]
 except ImportError:  # pragma: no cover - depends on which phases are merged
-    try:  # Phases 2-3 plan: app/deps.py
-        from .deps import get_current_user  # type: ignore[attr-defined]
+    try:  # Phase 3: app/deps.py
+        from .deps import current_user as get_current_user  # type: ignore[attr-defined]
     except ImportError:
         def get_current_user(request: Request):
             return getattr(request.state, "user", None)
