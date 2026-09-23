@@ -198,7 +198,7 @@
     {
       "id": "fluid-card",
       "file": "archive/fluid-card.png",
-      "source_path": "/Users/k4ssym/Downloads/fluid-card.png",
+      "source_path": "local original: fluid-card.png",
       "source_type": "Locally supplied original artwork visually matched to the user screenshot; not newly exported from live Figma.",
       "figma_node_id": null,
       "width_px": 1536,
