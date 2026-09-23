@@ -178,7 +178,14 @@ def test_login_requires_csrf(guest, token):
     ("/app", "/app"),
     ("/account/history", "/account/history"),
     ("/contractors/HK-42352", "/contractors/HK-42352"),
-    ("/app?city=Алматы&wishes=без+конкурсов", "/app"),
+    ("/app?city=Алматы&wishes=без+конкурсов", "/app?city=%D0%90%D0%BB%D0%BC%D0%B0%D1%82%D1%8B"),
+    ("/app?wishes=без+конкурсов", "/app"),
+    ("/app?date=2026-10-17&city=A&city=B", "/app?city=A&date=2026-10-17"),
+    ("/app?budget=" + "9" * 65, "/app"),
+    ("/app?city=%0d%0aSet-Cookie:x=1", "/app"),
+    ("/app?demo=s1#results", "/app?demo=s1"),
+    ("/account/history?tab=all", "/account/history"),
+    ("/app?" + "city=A&" * 2000, "/app"),
     ("/account/history#top", "/account/history"),
     ("https://attacker.example/", "/app"),
     ("//attacker.example/", "/app"),
@@ -213,6 +220,16 @@ def test_login_never_redirects_off_site(guest, next_path):
     response = log_in(guest, next_path=next_path)
     assert response.status_code == 303
     assert response.headers["location"] == "/app"
+
+
+S1_QUERY = ("city=%D0%90%D0%BB%D0%BC%D0%B0%D1%82%D1%8B&date=2026-10-17&event_type=%D1%81%D0%B2%D0%B0%D0%B4%D1%8C%D0%B1%D0%B0"
+            "&category=%D0%92%D0%B5%D0%B4%D1%83%D1%89%D0%B8%D0%B9&budget=1000000&duration=8"
+            "&language=%D0%BA%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D0%BA%D0%B8%D0%B9")
+
+
+def test_login_returns_to_the_same_app_results(guest):
+    response = log_in(guest, next_path=f"/app?{S1_QUERY}&wishes=private+text&utm=x")
+    assert response.headers["location"] == f"/app?{S1_QUERY}"
 
 
 def test_next_survives_a_failed_attempt(guest):
@@ -359,3 +376,38 @@ def test_throttle_window_expires():
     now[0] += 1
     assert throttle.retry_after(key) == 0
     assert throttle._failures == {}
+
+
+# --- guest banner (included by phase 4's app/search.html) ----------------------------------------
+
+class _Url:
+    def __init__(self, path, query=""):
+        self.path, self.query = path, query
+
+
+class _Request:
+    def __init__(self, path, query=""):
+        self.url = _Url(path, query)
+
+
+def render_banner(user, path="/app", query=""):
+    from app.web import templates
+    return templates.get_template("partials/guest_banner.html").render(
+        user=user, request=_Request(path, query), t=lambda key, **kw: key,
+    )
+
+
+def test_guest_banner_links_back_to_the_same_results(guest):
+    html = render_banner(None, query=S1_QUERY)
+    assert "guest-banner" in html
+    href = html.split('<a href="', 1)[1].split('"', 1)[0]
+    assert href.startswith("/login?next=/app%3F")  # "?" and "&" encoded, so the query stays inside next
+    token = login_page(guest).context["csrf"]
+    from urllib.parse import parse_qs, urlsplit
+    next_value = parse_qs(urlsplit(href).query)["next"][0]
+    assert login_page(guest, href).context["next_path"] == f"/app?{S1_QUERY}"
+    assert log_in(guest, next_path=next_value, csrf=token).headers["location"] == f"/app?{S1_QUERY}"
+
+
+def test_guest_banner_hidden_for_signed_in_user():
+    assert "guest-banner" not in render_banner({"id": 1, "name": "Demo"})

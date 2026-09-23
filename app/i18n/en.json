@@ -122,6 +122,8 @@
   "auth.logout.error_expired": "Couldn't log out because the page was out of date. Press Log out again.",
   "flash.signed_in": "Logged in as {name}.",
   "flash.signed_out": "You've logged out.",
+  "guest.banner.text": "You're searching as a guest: matching works without an account. Log in to keep your search history and saved contractors.",
+  "guest.banner.login": "Log in and come back to these results",
   "nav.categories": "Categories",
   "nav.example": "Sample results",
   "nav.questions": "Questions",
