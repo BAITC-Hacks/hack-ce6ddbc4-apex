@@ -6,9 +6,11 @@ from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
 from .config import settings
+from .db import get_user_by_id
 from .i18n import HTML_LANG, SUPPORTED, data_label, get_lang, translate
 
 templates = Jinja2Templates(directory=str(settings.base_dir / "app" / "templates"))
+_UNSET = object()
 
 
 def format_kzt(value: int) -> str:
@@ -26,7 +28,45 @@ def ensure_csrf(request: Request) -> str:
     return token
 
 
+def resolve_user(request: Request) -> dict | None:
+    """Signed-in user (dict without password_hash) or None. One SELECT per request, cached in request.state.user."""
+    cached = getattr(request.state, "user", _UNSET)
+    if cached is not _UNSET:
+        return cached
+    user = None
+    uid = request.session.get("uid")
+    if uid is not None:
+        try:
+            user = get_user_by_id(int(uid))
+        except (TypeError, ValueError):
+            user = None
+        if user is None:  # database was recreated or uid is broken: the session is no longer valid
+            request.session.pop("uid", None)
+    request.state.user = user
+    return user
+
+
+def set_flash(request: Request, key: str, kind: str = "ok", **params) -> None:
+    """One-time message that survives a redirect: set_flash(request, "flash.welcome", name="Aigerim").
+    kind: "ok" | "error" | "info"."""
+    request.session["flash"] = {"kind": kind, "key": key, "params": params}
+
+
+def pop_flash(request: Request) -> dict | None:
+    """Takes the flash out of the session: the next page no longer shows it."""
+    data = request.session.pop("flash", None)
+    if not isinstance(data, dict) or not data.get("key"):
+        return None
+    params, kind = data.get("params"), data.get("kind")
+    return {
+        "kind": kind if kind in ("ok", "error", "info") else "ok",
+        "key": str(data["key"]),
+        "params": params if isinstance(params, dict) else {},
+    }
+
+
 def render(request: Request, name: str, status_code: int = 200, **context):
+    resolve_user(request)  # before get_lang(): it reads user.preferred_lang from request.state.user
     lang = get_lang(request)
     base = {
         "lang": lang,
@@ -36,6 +76,7 @@ def render(request: Request, name: str, status_code: int = 200, **context):
         "user": getattr(request.state, "user", None),
         "csrf": ensure_csrf(request),
         "path": request.url.path,
+        "flash": pop_flash(request),
     }
     base.update(context)
     response = templates.TemplateResponse(
