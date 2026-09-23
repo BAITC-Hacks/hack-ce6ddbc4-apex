@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
+{% block title %}{{ t('history.title') }} — Tandau{% endblock %}
+{% block content %}
+{% set icons = {'found': 'check', 'partial': 'filter', 'no_category_in_city': 'info', 'none_match': 'close'} %}
+<div class="tl-container acc-layout">
+  {% include "account/_nav.html" %}
+  <section class="acc-main" aria-labelledby="acc-title">
+    <header class="acc-head">
+      <div>
+        <h1 id="acc-title">{{ t('history.title') }}</h1>
+        <p>{{ t('history.lead', limit=limit) }}</p>
+      </div>
+      {% if items %}<details class="acc-danger">
+        <summary class="tl-button btn--ghost tl-button-small">{{ t('history.clear') }}</summary>
+        <form method="post" action="/account/history/clear" class="acc-danger__body">
+          <input type="hidden" name="csrf" value="{{ csrf }}">
+          <p>{{ t('history.clear_confirm', n=items | length) }}</p>
+          <button class="tl-button tl-button-small acc-danger__yes" type="submit">{{ t('history.clear_yes') }}</button>
+        </form>
+      </details>{% endif %}
+    </header>
+    {% if user.is_demo %}<p class="acc-note">{{ icon('info') }}<span>{{ t('account.demo_note') }}</span></p>{% endif %}
+    {% if not items %}
+    <div class="acc-empty">
+      <h2>{{ t('history.empty.title') }}</h2>
+      <p>{{ t('history.empty.text') }}</p>
+      <a class="tl-button" href="/app">{{ t('history.empty.cta') }}{{ icon('arrow') }}</a>
+    </div>
+    {% else %}
+    <p class="acc-note acc-note--plain">{{ t('history.recheck_note') }}</p>
+    <div class="acc-table-wrap"><table class="history-table">
+      <caption class="visually-hidden">{{ t('history.caption', n=items | length) }}</caption>
+      <thead><tr>
+        {% for col in ('when', 'params', 'status', 'results') %}<th scope="col">{{ t('history.col.' ~ col) }}</th>{% endfor %}
+        <th scope="col"><span class="visually-hidden">{{ t('history.col.actions') }}</span></th>
+      </tr></thead>
+      <tbody>
+      {% for it in items %}{% set p = it.params %}
+        <tr>
+          <td data-label="{{ t('history.col.when') }}"><time datetime="{{ it.when_iso }}">{{ it.when }}</time></td>
+          <td data-label="{{ t('history.col.params') }}">
+            <strong>{{ label('city', p.city) }} · {{ p.date | human_date }}</strong><br>
+            {{ label('format', p.event_type) }} · {{ label('category', p.category) }} · {{ t('history.budget', budget=(p.budget_kzt | kzt)) }}
+            {% if p.language or p.duration_h %}<br><span class="acc-muted">{{ label('language', p.language) if p.language }}
+              {%- if p.language and p.duration_h %} · {% endif %}{{ t('history.hours', h=p.duration_h) if p.duration_h }}</span>{% endif %}
+            {% if p.wishes %}<br><span class="acc-muted">«{{ p.wishes | truncate(80) }}»</span>{% endif %}
+          </td>
+          <td data-label="{{ t('history.col.status') }}"><span class="status-badge status-badge--{{ it.status }}">{{ icon(icons.get(it.status, 'info')) }}{{ t('history.status.' ~ it.status) }}</span></td>
+          <td data-label="{{ t('history.col.results') }}">
+            {% for r in it.results %}<a href="/contractors/{{ r.id }}">{{ r.name }}</a>{% if not loop.last %}, {% endif %}
+            {% else %}<span class="acc-muted">{{ t('history.no_results') }}</span>{% endfor %}</td>
+          <td><a class="tl-button btn--ghost tl-button-small" href="{{ it.repeat_url }}"
+                 aria-label="{{ t('history.repeat_aria', when=it.when) }}">{{ t('history.repeat') }}</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

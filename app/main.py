@@ -7,8 +7,9 @@ from starlette.middleware.sessions import SessionMiddleware
 from matcher.data import load_catalog
 
 from .config import settings
+from .db import init_db
 from .i18n import load_locales
-from .routes import api, pages
+from .routes import account, api, contractors, pages
 
 
 def create_app() -> FastAPI:
@@ -30,8 +31,11 @@ def create_app() -> FastAPI:
     )
     load_locales(settings.base_dir / "app" / "i18n")
     application.state.catalog = load_catalog(settings.data_path)
+    init_db()  # phase 6 needs users/searches/shortlist; phase 2 owns this call at integration
     application.include_router(pages.router)
     application.include_router(api.router)
+    application.include_router(contractors.router)
+    application.include_router(account.router)
     return application
 
 

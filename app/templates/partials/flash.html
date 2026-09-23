@@ -1,0 +1,6 @@
+{% from 'partials/icons.html' import icon %}
+{% if flash %}
+<div class="tl-container flash-wrap">
+  <p class="flash flash--{{ flash.kind }}" role="{{ 'alert' if flash.kind == 'error' else 'status' }}">{{ icon('check' if flash.kind == 'ok' else 'info') }}<span>{{ t(flash.key, **flash.params) }}</span></p>
+</div>
+{% endif %}

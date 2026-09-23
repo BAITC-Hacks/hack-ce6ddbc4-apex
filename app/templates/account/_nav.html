@@ -1,0 +1,10 @@
+{% from 'partials/icons.html' import icon %}
+<aside class="acc-side">
+  <p class="tl-eyebrow">{{ t('account.kicker') }}</p>
+  <nav class="acc-nav" aria-label="{{ t('account.nav.label') }}">
+    {% for href, key, ic in [('/account/history', 'history', 'clock'), ('/account/shortlist', 'shortlist', 'bookmark')] %}
+    <a href="{{ href }}"{% if path == href %} aria-current="page"{% endif %}>{{ icon(ic) }}{{ t('account.nav.' ~ key) }}</a>
+    {% endfor %}
+  </nav>
+  <p class="acc-user">{{ t('account.signed_in', name=user.name) }}<br><span>{{ user.email }}</span></p>
+</aside>

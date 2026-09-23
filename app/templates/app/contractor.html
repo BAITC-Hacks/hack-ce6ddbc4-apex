@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
+{% block title %}{{ contractor.name if contractor else t('contractor.not_found.title') }} — Tandau{% endblock %}
+{% block content %}
+{% if not contractor %}
+<section class="tl-container prof-page">
+  <div class="acc-empty">
+    <h1>{{ t('contractor.not_found.title') }}</h1>
+    <p>{{ t('contractor.not_found.text', id=requested_id) }}</p>
+    <a class="tl-button" href="/app">{{ t('contractor.not_found.cta') }}{{ icon('arrow') }}</a>
+  </div>
+</section>
+{% else %}{% set c = contractor %}
+<article class="tl-container prof-page" aria-labelledby="prof-name">
+  <p><a class="prof-back" href="{{ back_url }}">← {{ t('contractor.back') }}</a></p>
+  <header class="prof-head">
+    <div class="prof-head__top">
+      <div class="prof-initial" aria-hidden="true">{{ c.name[0] }}</div>
+      <div class="prof-head__title">
+        <h1 id="prof-name">{{ c.name }}</h1>
+        <p class="prof-meta">{% for cat in c.categories %}{{ label('category', cat) }}{% if not loop.last %}, {% endif %}{% endfor %} · {{ label('city', c.city) }} · <span>{{ t('contractor.id') }}: {{ c.id }}</span></p>
+      </div>
+      {% with cid=c.id, cname=c.name %}{% include "partials/fav_button.html" %}{% endwith %}
+    </div>
+    <div class="prof-price"><span>{{ t('card.starting_price') }}</span><strong>{{ c.price_from_kzt|kzt }}</strong><small>{{ t('card.price_note') }}</small></div>
+    {% if badges %}<ul class="prof-flags" aria-label="{{ t('contractor.flags') }}">
+      {% for b in badges %}<li><span class="badge badge--{{ b }}">{{ icon('info') }}{{ t('badge.' ~ b) }}</span><span>{{ t('contractor.flag.' ~ b) }}</span></li>{% endfor %}
+    </ul>{% endif %}
+    <dl class="prof-facts">
+      <div><dt>{{ t('contractor.formats') }}</dt>
+        <dd>{% for f in c.event_formats %}{{ label('format', f) }}{% if not loop.last %}, {% endif %}{% endfor %}</dd></div>
+      <div><dt>{{ t('contractor.languages') }}</dt>
+        <dd>{% for l in c.languages %}{{ label('language', l) }}{% if not loop.last %}, {% endif %}{% endfor %}</dd></div>
+      <div><dt>{{ t('contractor.max_hours') }}</dt>
+        <dd>{% if c.max_hours %}{{ t('contractor.hours_value', h=c.max_hours) }}{% else %}{{ t('contractor.hours_none') }}
+          <small>{{ t('contractor.hours_none_hint') }}</small>{% endif %}</dd></div>
+    </dl>
+    <div class="prof-actions">
+      <a class="tl-button btn--ghost" href="{{ similar[0][1] }}">{{ icon('search') }}{{ t('contractor.similar') }}</a>
+      <p>{{ t('contractor.similar_hint', city=label('city', c.city), category=label('category', similar[0][0])) }}</p>
+    </div>
+    {% if similar | length > 1 %}<p class="prof-more">{{ t('contractor.similar_other') }}
+      {% for cat, url in similar[1:] %}<a href="{{ url }}">{{ label('category', cat) }}</a>{% endfor %}</p>{% endif %}
+  </header>
+
+  <section class="prof-section" aria-labelledby="about-title">
+    <h2 id="about-title">{{ t('contractor.about') }}</h2>
+    <p class="prof-description" lang="ru">{{ c.description }}</p>
+    <p class="prof-note">{{ t('contractor.about_note') }}</p>
+  </section>
+
+  <section class="prof-section" id="calendar" aria-labelledby="cal-title">
+    <h2 id="cal-title">{{ t('calendar.title') }}</h2>
+    <p class="prof-note">{{ t('calendar.lead', start=(avail.window.start | human_date), end=(avail.window.end | human_date), days=avail.window.days) }}</p>
+    {% if selected %}<p class="cal-selected cal-selected--{{ selected_state }}" role="status">{{ t('calendar.selected', date=(selected | human_date), state=t('calendar.state.' ~ selected_state)) }}</p>{% endif %}
+    <ul class="cal-stats">
+      <li><strong>{{ t('contractor.free_total', free=avail.free_days_count, total=avail.window.days) }}</strong></li>
+      <li>{{ t('contractor.free_next30', days=avail.free_next_30.days, start=(avail.free_next_30.start | short_date),
+                end=(avail.free_next_30.end | short_date), free=avail.free_next_30.free) }}</li>
+      <li>{{ t('contractor.free_december', free=december.free, total=december.days) }} <span>— {{ t('contractor.season_note') }}</span></li>
+    </ul>
+    <ul class="cal-legend" aria-label="{{ t('calendar.legend') }}">
+      {% for s in ('free', 'busy', 'out') %}<li><span class="cal-swatch cal-swatch--{{ s }}" aria-hidden="true"></span>{{ t('calendar.state.' ~ s)|capitalize }}</li>{% endfor %}
+    </ul>
+    <div class="calendar">
+      {% for m in months %}
+      <table class="calendar__month">
+        <caption>{{ t('calendar.month.' ~ m.month) }} {{ m.year }} <span>· {{ t('calendar.month_free', free=m.free, total=m.days) }}</span></caption>
+        <thead><tr>{% for wd in range(7) %}<th scope="col"><abbr title="{{ t('calendar.weekday_full.' ~ wd) }}">{{ t('calendar.weekday.' ~ wd) }}</abbr></th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for week in m.weeks %}<tr>
+          {% for d in week %}{% if d is none %}<td class="cal-day cal-day--pad"></td>
+          {% else %}{% set cell = t('calendar.cell', date=(d.iso | human_date), weekday=t('calendar.weekday_full.' ~ d.weekday), state=t('calendar.state.' ~ d.state)) %}
+          <td class="cal-day cal-day--{{ d.state }}" data-date="{{ d.iso }}"{% if d.iso == selected %} aria-current="date"{% endif %} aria-label="{{ cell }}" title="{{ cell }}">{{ d.day }}</td>{% endif %}
+          {% endfor %}
+        </tr>{% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+    </div>
+    <details class="cal-text">
+      <summary>{{ t('calendar.free_list') }}</summary>
+      {% for m in months %}<p><strong>{{ t('calendar.month.' ~ m.month) }}:</strong>
+        {{ m.free_days | join(', ') if m.free_days else t('calendar.none_free') }}</p>{% endfor %}
+    </details>
+    <p class="prof-note">{{ t('calendar.no_booking') }}</p>
+  </section>
+</article>
+{% endif %}
+{% endblock %}

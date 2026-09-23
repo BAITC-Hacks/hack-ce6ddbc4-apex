@@ -1,0 +1,20 @@
+{# Phase 6 save toggle. Expects cid, cname (via {% with %}); user, csrf, t, shortlist_ids, request come from render().
+   The button sends the explicit target state, so a double submit cannot undo itself. #}
+{% from 'partials/icons.html' import icon %}
+{% set starred = cid in (shortlist_ids or []) %}
+{% set here = request.url.path ~ ('?' ~ request.url.query if request.url.query else '') %}
+{% if user %}
+<form method="post" action="/account/shortlist/{{ cid }}" class="fav-form" id="fav-{{ cid }}">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <input type="hidden" name="next" value="{{ here }}">
+  <input type="hidden" name="action" value="{{ 'remove' if starred else 'add' }}">
+  <button type="submit" class="fav-btn{% if starred %} is-on{% endif %}"
+          title="{{ t('shortlist.remove_title' if starred else 'shortlist.add_title', name=cname) }}">
+    {{ icon('check' if starred else 'bookmark') }}<span>{{ t('shortlist.in' if starred else 'shortlist.add') }}</span><span class="visually-hidden">: {{ cname }}</span>
+  </button>
+</form>
+{% else %}
+<a class="fav-login" id="fav-{{ cid }}" href="/login?next={{ here | urlencode }}">
+  {{ icon('bookmark') }}<span>{{ t('shortlist.login_to_save') }}</span><span class="visually-hidden">: {{ cname }}</span>
+</a>
+{% endif %}
