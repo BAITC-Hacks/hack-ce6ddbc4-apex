@@ -1,7 +1,7 @@
 {# Фаза 5: «Почему не больше» — группы по первичной причине + «ещё N ниже в рейтинге» #}
 {% if resp.why_not %}
-<section class="why" aria-labelledby="why-title-{{ side | default('main') }}">
-  <h2 class="why__title" id="why-title-{{ side | default('main') }}">{{ t('why.title') }}</h2>
+<section class="why" aria-labelledby="whynot-title-{{ side | default('main') }}">
+  <h2 class="why__title" id="whynot-title-{{ side | default('main') }}">{{ t('why.title') }}</h2>
   <ul class="why__list">
     {% for line in resp.why_not %}
     <li class="why__item why__item--{{ line.reason }}"><span class="why__tag">{{ t('why.tag.' ~ line.reason) }}</span> {{ line.text }}</li>

@@ -1,6 +1,6 @@
 {# Фаза 5: подсказки — ссылка повторяет текущий запрос с изменённой датой / бюджетом / городом #}
 {% if resp.hints %}
-{% set base_query = dict(request.query_params) %}
+{% set base_query = dict(request.query_params.items() | rejectattr(0, 'equalto', 'wishes') | list) %}{# пожелания не передаются в URL #}
 <section class="hints" aria-labelledby="hints-title">
   <h2 class="hints__title" id="hints-title">{{ t('hint.title') }}</h2>
   <ul class="hints__list">

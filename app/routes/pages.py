@@ -152,7 +152,7 @@ from matcher.models import SearchRequest
 
 from ..i18n import get_lang
 
-QUERY_FIELDS = ("city", "event_type", "category", "budget", "language", "duration", "wishes")
+QUERY_FIELDS = ("city", "event_type", "category", "budget", "language", "duration")   # wishes не передаём в URL
 ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
