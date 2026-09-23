@@ -5,7 +5,7 @@ from urllib.parse import parse_qsl, unquote, urlencode, urlsplit, urlunsplit
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-from ..i18n import SUPPORTED
+from ..i18n import SUPPORTED, translate
 from ..web import render
 
 router = APIRouter()
@@ -50,6 +50,19 @@ def landing(request: Request):
         stats=catalog.stats(),
         categories=catalog.category_rows(),
         example_cards=_example_cards(catalog),
+    )
+
+
+@router.get("/designbook", response_class=HTMLResponse, include_in_schema=False)
+def designbook(request: Request):
+    """Team-facing visual specimens; no matching or account mutations."""
+    catalog = request.app.state.catalog
+    return render(
+        request,
+        "designbook.html",
+        stats=catalog.stats(),
+        example_cards=_example_cards(catalog),
+        t=lambda key, **values: translate("ru", key, **values),
     )
 
 

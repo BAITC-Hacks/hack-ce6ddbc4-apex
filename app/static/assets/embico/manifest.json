@@ -1,0 +1,367 @@
+{
+  "source": {
+    "path": "/Users/k4ssym/Downloads/embico.pdf/embico.pdf",
+    "filename": "embico.pdf",
+    "sha256": "5cb430c10a7943be55d882e60a9cf3bf9a22d575248f9eb3a9ba4936f6a1247b",
+    "page_count": 29,
+    "page_dimensions_pt": [
+      1920,
+      1080
+    ],
+    "embedded_image_dimensions_px": [
+      1920,
+      1080
+    ],
+    "source_type": "Each PDF page contains one flattened image; no separate Figma layers or font resources."
+  },
+  "coordinate_convention": "Pixel crop rectangles [left, top, right, bottom], right/bottom exclusive, origin at upper left. Native embedded page image is 1920 by 1080 pixels.",
+  "assets": [
+    {
+      "id": "documents-3d",
+      "file": "documents-3d.png",
+      "source_page": 5,
+      "source_image_xref": 40,
+      "crop_box_px": [
+        112,
+        320,
+        352,
+        560
+      ],
+      "width_px": 240,
+      "height_px": 240,
+      "background": "#FFFFFF",
+      "label": "Document sheets",
+      "suggested_use": "Brief intake and structured project information",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "002a1b43f33e1ecf8e1013419877bb5b40421d2722aaa9d5112198b14a10606f"
+    },
+    {
+      "id": "chain-3d",
+      "file": "chain-3d.png",
+      "source_page": 5,
+      "source_image_xref": 40,
+      "crop_box_px": [
+        704,
+        320,
+        944,
+        560
+      ],
+      "width_px": 240,
+      "height_px": 240,
+      "background": "#FAFAFB",
+      "label": "Broken chain",
+      "suggested_use": "Explain gaps or missing requirements; do not imply successful connection",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "f9fd9eeb86e46c4e838111e8357f1ab964f9ac43e7b0cc39deb1dcbfa95bdf8e"
+    },
+    {
+      "id": "restricted-cube-3d",
+      "file": "restricted-cube-3d.png",
+      "source_page": 5,
+      "source_image_xref": 40,
+      "crop_box_px": [
+        1288,
+        320,
+        1528,
+        560
+      ],
+      "width_px": 240,
+      "height_px": 240,
+      "background": "#FFFFFF",
+      "label": "Cube with prohibition ring",
+      "suggested_use": "Unsupported or blocked state; do not use as a success or trust badge",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "25f0904ccc9d91669582388d5e195edca9c201ceeb4d44220695fea967e63cff"
+    },
+    {
+      "id": "timer-3d",
+      "file": "timer-3d.png",
+      "source_page": 17,
+      "source_image_xref": 136,
+      "crop_box_px": [
+        112,
+        316,
+        352,
+        556
+      ],
+      "width_px": 240,
+      "height_px": 240,
+      "background": "#FFFFFF",
+      "label": "Circular timer",
+      "suggested_use": "Fast shortlist / delivery time",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "f6e37b7b02519bcbeddf5df423c72b3eb948cae09c7fd341e5d9e141ada739af"
+    },
+    {
+      "id": "stack-3d",
+      "file": "stack-3d.png",
+      "source_page": 17,
+      "source_image_xref": 136,
+      "crop_box_px": [
+        688,
+        316,
+        928,
+        556
+      ],
+      "width_px": 240,
+      "height_px": 240,
+      "background": "#FAFAFB",
+      "label": "Stacked blue and grey rounded slabs",
+      "suggested_use": "Comparison and layered evidence",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "326a988b5b9102eebda764caf40204e86ffa566b6cd00871d2130e5159a43c39"
+    },
+    {
+      "id": "grid-3d",
+      "file": "grid-3d.png",
+      "source_page": 17,
+      "source_image_xref": 136,
+      "crop_box_px": [
+        1288,
+        316,
+        1528,
+        556
+      ],
+      "width_px": 240,
+      "height_px": 240,
+      "background": "#FFFFFF",
+      "label": "Four rounded blocks",
+      "suggested_use": "Categories and dashboard modules",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "48b1382ce0e2ec7fa74c4fd1ffabb46db9a63d613c0770040d1eaef8cc86f839"
+    },
+    {
+      "id": "glass-wave-wide",
+      "file": "glass-wave-wide.png",
+      "source_page": 24,
+      "source_image_xref": 192,
+      "crop_box_px": [
+        0,
+        700,
+        1920,
+        1080
+      ],
+      "width_px": 1920,
+      "height_px": 380,
+      "background": "mixed white and translucent blue",
+      "label": "Blue glass wave",
+      "suggested_use": "Decorative wide footer or masthead edge",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "2819da797ef51c891c271b0e623ea08ca92b96f799f6a7d088b938eca8c64e76"
+    },
+    {
+      "id": "glass-wave-blue-edge",
+      "file": "glass-wave-blue-edge.png",
+      "source_page": 1,
+      "source_image_xref": 9,
+      "crop_box_px": [
+        0,
+        0,
+        200,
+        1080
+      ],
+      "width_px": 200,
+      "height_px": 1080,
+      "background": "mixed blue",
+      "label": "Narrow blue glass edge",
+      "suggested_use": "Decorative edge only; native width is 200 pixels",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "87ae826e309955dc8b3be1560da50fd4887025fde703ec7b76fc015a6437b1fa"
+    },
+    {
+      "id": "cobalt-grid-strip",
+      "file": "cobalt-grid-strip.png",
+      "source_page": 25,
+      "source_image_xref": 200,
+      "crop_box_px": [
+        0,
+        200,
+        1920,
+        380
+      ],
+      "width_px": 1920,
+      "height_px": 180,
+      "background": "#2B5FE3",
+      "label": "Cobalt grid with crosses",
+      "suggested_use": "Decorative blue band",
+      "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
+      "sha256": "582f1a4696f45fe85decd703251e81c2adbce995ce011febf592ea1135179967"
+    }
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "embedded_image_xref": 9,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 2,
+      "embedded_image_xref": 16,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 3,
+      "embedded_image_xref": 24,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 4,
+      "embedded_image_xref": 32,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 5,
+      "embedded_image_xref": 40,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 6,
+      "embedded_image_xref": 48,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 7,
+      "embedded_image_xref": 56,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 8,
+      "embedded_image_xref": 64,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 9,
+      "embedded_image_xref": 72,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 10,
+      "embedded_image_xref": 80,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 11,
+      "embedded_image_xref": 88,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 12,
+      "embedded_image_xref": 96,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 13,
+      "embedded_image_xref": 104,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 14,
+      "embedded_image_xref": 112,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 15,
+      "embedded_image_xref": 120,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 16,
+      "embedded_image_xref": 128,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 17,
+      "embedded_image_xref": 136,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 18,
+      "embedded_image_xref": 144,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 19,
+      "embedded_image_xref": 152,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 20,
+      "embedded_image_xref": 160,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 21,
+      "embedded_image_xref": 168,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 22,
+      "embedded_image_xref": 176,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 23,
+      "embedded_image_xref": 184,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 24,
+      "embedded_image_xref": 192,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 25,
+      "embedded_image_xref": 200,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 26,
+      "embedded_image_xref": 208,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 27,
+      "embedded_image_xref": 216,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 28,
+      "embedded_image_xref": 224,
+      "width_px": 1920,
+      "height_px": 1080
+    },
+    {
+      "page": 29,
+      "embedded_image_xref": 232,
+      "width_px": 1920,
+      "height_px": 1080
+    }
+  ]
+}
