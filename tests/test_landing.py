@@ -118,7 +118,7 @@ def test_public_actions_have_real_destinations(client):
     for href in parsed.links:
         if href.startswith("#"):
             assert f'id="{href[1:]}"' in html, href
-    assert "/login" not in parsed.links and "/register" not in parsed.links
+    assert "/login" in parsed.links and "/register" in parsed.links  # phases 2-3: header account actions
     assert "#brief" in parsed.links and "#example" in parsed.links
     # JavaScript-only controls are hidden in the server HTML.
     for marker in ("data-brief-example", "data-budget-presets", "data-catalog-switch"):
