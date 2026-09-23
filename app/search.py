@@ -15,11 +15,22 @@ from matcher.validation import error, normalize_budget, normalize_hours, validat
 
 from .i18n import get_lang, translate
 
-try:  # Phases 2-3 (auth) provide the real dependency.
-    from .deps import get_current_user  # type: ignore[attr-defined]
+# Hooks of other phases; each falls back to a no-op until that phase is merged.
+try:  # Phase 2: signed-in user from the session
+    from .web import resolve_user as get_current_user  # type: ignore[attr-defined]
 except ImportError:  # pragma: no cover - depends on which phases are merged
-    def get_current_user(request: Request):
-        return getattr(request.state, "user", None)
+    try:  # Phases 2-3 plan: app/deps.py
+        from .deps import get_current_user  # type: ignore[attr-defined]
+    except ImportError:
+        def get_current_user(request: Request):
+            return getattr(request.state, "user", None)
+try:  # Phase 6: history and shortlist
+    from .routes.account import record_search as save_search, starred_ids  # type: ignore[attr-defined]
+except ImportError:  # pragma: no cover - depends on which phases are merged
+    save_search = None
+
+    def starred_ids(user) -> set[str]:
+        return set()
 
 
 REQUIRED = ("city", "date", "event_type", "category", "budget")
@@ -66,11 +77,16 @@ def demo_links() -> list[dict]:
 
 
 def record_search(request: Request, req: SearchRequest, resp: SearchResponse) -> None:
-    """History hook (stub). Phase 6: INSERT INTO searches(user_id, params_json, status, result_ids)."""
+    """History hook: Phase 6 saves members' valid searches; guests and invalid requests are never saved."""
     user = get_current_user(request)
-    if not user or resp.status == "invalid_request":
+    if not user or resp.status == "invalid_request" or save_search is None:
         return
-    # Phase 6: save_search(user["id"], req.canonical_json(), resp.status, ",".join(c.id for c in resp.cards))
+    save_search(user["id"], req, resp)
+
+
+def _profiles_enabled(request: Request) -> bool:
+    """Phase 6 adds /contractors/{id}; cards link to it only when the route exists."""
+    return any(getattr(r, "path", "").startswith("/contractors/") for r in request.app.routes)
 
 
 def _parse_query(request: Request) -> tuple[dict[str, str], dict[str, str]]:
@@ -169,6 +185,8 @@ def search_context(request: Request) -> dict:
         record_search(request, req, resp)
 
     user = get_current_user(request)
+    ctx["shortlist_ids"] = starred_ids(user)
+    ctx["profiles_enabled"] = _profiles_enabled(request)
     if not form["city"] and user and user.get("preferred_city"):
         form["city"] = user["preferred_city"]    # matching above already ran strictly on the query
     return ctx

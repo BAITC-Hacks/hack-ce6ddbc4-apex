@@ -72,6 +72,7 @@
 .result-card__initial { display: inline-flex; flex: none; width: 48px; height: 48px; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--tl-panel); border: 1px solid var(--tl-line); font-size: 20px; font-weight: 500; }
 .result-card__who { min-width: 0; }
 .result-card__name { margin: 0; font-size: 22px; line-height: 28px; font-weight: 500; overflow-wrap: anywhere; }
+.result-card__name a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .result-card__meta { margin: var(--s1) 0 0; font-size: 14px; line-height: 20px; color: var(--tl-muted); }
 .result-card__price-block { display: grid; gap: var(--s2); padding-top: var(--s4); border-top: 1px solid var(--tl-line); }
 .result-card__price { margin: 0; font-size: 28px; line-height: 34px; white-space: nowrap; font-variant-numeric: tabular-nums; }

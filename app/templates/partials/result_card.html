@@ -5,11 +5,12 @@
 <article class="result-card" aria-labelledby="card-{{ card.id }}" data-id="{{ card.id }}">
   <header class="result-card__top">
     <p class="result-card__position"><span aria-hidden="true">{{ '%02d'|format(rank) }}</span><span class="visually-hidden">{{ t('result.position', rank=rank, n=n_cards) }}</span></p>
+    {% with cid=card.id, cname=card.name %}{% include "partials/fav_button.html" ignore missing %}{% endwith %}
   </header>
   <div class="result-card__identity">
     <span class="result-card__initial" aria-hidden="true">{{ card.name[:1]|upper }}</span>
     <div class="result-card__who">
-      <h3 id="card-{{ card.id }}" class="result-card__name">{{ card.name }}</h3>
+      <h3 id="card-{{ card.id }}" class="result-card__name">{% if profiles_enabled %}<a href="/contractors/{{ card.id }}?date={{ resp.meta.request.date }}">{{ card.name }}</a>{% else %}{{ card.name }}{% endif %}</h3>
       <p class="result-card__meta">{{ label('category', card.category) }} · {{ label('city', card.city) }}</p>
     </div>
   </div>

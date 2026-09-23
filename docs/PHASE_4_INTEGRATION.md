@@ -53,4 +53,6 @@
 
 ## 5. Для фаз 5–6
 
+Хуки фазы 6 (ветка `claude/phase-6-implementation-bc7217`) уже подключены в `app/search.py` через запасные импорты: `resolve_user` из `app.web`, `record_search` и `starred_ids` из `app.routes.account` (гость и `invalid_request` не сохраняются), `shortlist_ids` в контексте. В `partials/result_card.html` — `partials/fav_button.html` (`ignore missing`) и ссылка имени на `/contractors/<id>?date=<дата запроса>`, которая появляется, только когда маршрут профиля зарегистрирован. После слияния фазы 6 правок не нужно.
+
 Точки расширения — раздел 17 спецификации без изменений: `ATOM_WEIGHTS`/`build_atoms()`, `contrast_atoms()`, `scoring.COMPONENTS`/`WEIGHTS`, `SearchResponse.hints`, `record_search()` в `app/search.py` (запись в `searches` — фаза 6). Фаза 5 строится поверх `matcher/` этой ветки: её стоит начинать от этой ветки, а не от `fbd1f82`, иначе те же файлы будут написаны дважды.

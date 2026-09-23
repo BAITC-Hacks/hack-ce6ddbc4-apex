@@ -85,3 +85,21 @@ def test_demo_scenarios_render_in_every_language(client, lang):
         block = results_html(r.text)
         assert "{" not in block and "}" not in block, (d["key"], lang)
         assert not RAW_KEY.search(re.sub(r"<[^>]+>", " ", block)), (d["key"], lang, RAW_KEY.search(block))
+
+
+def test_history_hook_saves_members_only(client, monkeypatch):
+    import app.search as search
+    saved = []
+    monkeypatch.setattr(search, "save_search", lambda uid, req, resp: saved.append((uid, resp.status)))
+    client.get("/app?" + urlencode(S1))
+    assert saved == []                                        # guest: never saved
+    monkeypatch.setattr(search, "get_current_user", lambda request: {"id": 7})
+    client.get("/app?" + urlencode(S1))
+    client.get("/app?" + urlencode({**S1, "date": "2027-01-15"}))   # invalid_request: not saved
+    assert saved == [(7, "found")]
+
+
+def test_cards_link_to_profiles_only_when_route_exists(client):
+    assert 'href="/contractors/' not in client.get("/app?" + urlencode(S1)).text
+    client.app.add_api_route("/contractors/{contractor_id}", lambda contractor_id: {}, methods=["GET"])
+    assert 'href="/contractors/HK-' in client.get("/app?" + urlencode(S1)).text
