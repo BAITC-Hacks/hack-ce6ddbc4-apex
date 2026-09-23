@@ -1,0 +1,110 @@
+{% macro icon(name) -%}<svg class="tl-icon" aria-hidden="true"><use href="/static/assets/tandau/tandau-icons.svg#{{ name }}"></use></svg>{%- endmacro %}
+{% macro wordmark() -%}<span class="tl-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>tandau</span>{%- endmacro %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Макет Tandau. Подбор подрядчиков для мероприятий по городу, дате, формату и бюджету.">
+  <title>Tandau · Макет лендинга</title>
+  <link rel="stylesheet" href="/static/css/landing_sample.css">
+</head>
+<body>
+<a class="tl-skip" href="#main">Перейти к содержимому</a>
+<div class="tl-prototype"><div class="tl-container"><span>Макет лендинга и рабочего экрана</span><a href="/designbook">Вернуться в дизайнбук {{ icon('arrow') }}</a></div></div>
+<header class="tl-header">
+  <div class="tl-container tl-header-inner">
+    <a class="tl-wordmark" href="#main" aria-label="Tandau, начало страницы">{{ wordmark() }}</a>
+    <nav class="tl-desktop-nav" aria-label="Основная навигация"><a href="#how">Как работает</a><a href="#categories">Категории</a><a href="#workspace">Пример подбора</a></nav>
+    <div class="tl-header-actions"><div class="tl-language" aria-label="Языки основной страницы"><a href="/?lang=ru" lang="ru" aria-label="Основная страница на русском">RU</a><a href="/?lang=kk" lang="kk" aria-label="Основная страница на казахском">ҚАЗ</a><a href="/?lang=en" lang="en" aria-label="Основная страница на английском">EN</a></div><a class="tl-header-login" href="/designbook?phase=3#screens">Вход</a><a class="tl-button tl-button-small" href="#brief">Начать {{ icon('arrow') }}</a><button class="tl-menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="Открыть меню"><span></span><span></span></button></div>
+  </div>
+  <nav class="tl-mobile-nav" id="mobile-menu" aria-label="Мобильная навигация" hidden><a href="#how">Как работает</a><a href="#categories">Категории</a><a href="#workspace">Пример подбора</a><a href="/designbook?phase=3#screens">Вход</a><div><a href="/?lang=ru">RU</a><a href="/?lang=kk">ҚАЗ</a><a href="/?lang=en">EN</a></div></nav>
+</header>
+<main id="main">
+  <section class="tl-hero tl-container">
+    <div class="tl-hero-copy"><p class="tl-eyebrow"><span></span>Подрядчики для мероприятий</p><h1>Соберите команду<br>вашего события.</h1><p class="tl-hero-description">Город, дата, бюджет. До трёх вариантов с объяснением, почему каждый подходит.</p><div class="tl-hero-actions"><a class="tl-button" href="#brief">Задать условия {{ icon('arrow') }}</a><a class="tl-text-link" href="#workspace">Посмотреть пример {{ icon('eye') }}</a></div><p class="tl-hero-note">Подбор доступен без регистрации</p><div class="tl-hero-proof"><div><strong>{{ stats.profiles }}</strong><span>профилей в каталоге</span></div><div><strong>{{ stats.categories }}</strong><span>категорий услуг</span></div><div><strong>{{ stats.cities }}</strong><span>локации</span></div></div></div>
+    <div class="tl-event-board" aria-label="Пример запроса на свадебного ведущего">
+      <div class="tl-board-top"><span>Карточка события</span><span>Алматы</span></div>
+      <div class="tl-event-date"><span>17</span><div>Октябрь<br><strong>2026</strong></div><span class="tl-event-day">Суббота</span></div>
+      <div class="tl-event-title"><span class="tl-eyebrow">Свадьба</span><h2>Нужен ведущий.</h2></div>
+      <div class="tl-board-rule"></div>
+      <div class="tl-event-budget"><span>Бюджет на подрядчика</span><strong>1 000 000 <small>₸</small></strong></div>
+      <div class="tl-board-selection"><div><span>В примере</span><strong>Три профиля</strong></div><div class="tl-monograms" aria-label="Эмилия, Кики, Хаул"><span>Э</span><span>К</span><span>Х</span></div></div>
+      <a class="tl-board-link" href="#workspace"><span>Открыть подборку</span>{{ icon('arrow') }}</a>
+      <p class="tl-board-note">Подготовленный пример из каталога</p>
+    </div>
+  </section>
+
+  <section class="tl-brief-wrap" id="brief" aria-labelledby="brief-heading">
+    <div class="tl-container"><div class="tl-brief-heading"><h2 id="brief-heading">С чего начнём?</h2><span>Форма для знакомства с интерфейсом</span></div>
+      <form class="tl-brief" id="event-brief">
+        <div class="tl-brief-cell"><label for="brief-city">{{ icon('location') }}Город</label><select id="brief-city"><option>Алматы</option><option>Астана</option><option>Зарубежье</option></select></div>
+        <div class="tl-brief-cell"><label for="brief-date">{{ icon('calendar') }}Дата события</label><input id="brief-date" type="date" value="2026-10-17" min="2026-09-23" max="2026-12-31" required></div>
+        <div class="tl-brief-cell"><label for="brief-category">{{ icon('grid') }}Кого ищете</label><select id="brief-category">{% for category in categories %}<option{% if category.name == 'Ведущий' %} selected{% endif %}>{{ category.name }}</option>{% endfor %}</select></div>
+        <div class="tl-brief-cell"><label for="brief-budget">{{ icon('wallet') }}Бюджет до, ₸</label><input id="brief-budget" type="number" value="1000000" min="1" step="1" required></div>
+        <button class="tl-button" type="submit">Открыть пример {{ icon('arrow') }}</button>
+      </form><p class="tl-brief-note" id="brief-status" role="status">Форма не пересчитывает подборку. Ниже показан фиксированный свадебный сценарий.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-container" id="how">
+    <div class="tl-section-heading"><p class="tl-eyebrow">Как работает подбор</p><h2>От условий<br>к трём кандидатам.</h2><p>У каждой рекомендации есть основание. У каждого ограничения есть подпись.</p></div>
+    <ol class="tl-steps">
+      <li><div class="tl-step-top"><span>01</span>{{ icon('filter') }}</div><h3>Задайте условия</h3><p>Укажите город, дату, формат мероприятия, категорию и бюджет.</p><span class="tl-step-meta">Пять обязательных параметров</span></li>
+      <li><div class="tl-step-top"><span>02</span>{{ icon('compare') }}</div><h3>Сравните варианты</h3><p>Посмотрите до трёх профилей. Сравните стартовую цену и причины выбора.</p><span class="tl-step-meta">Цена и объяснение рядом</span></li>
+      <li><div class="tl-step-top"><span>03</span>{{ icon('bookmark') }}</div><h3>Сохраните подборку</h3><p>Запланированная функция аккаунта позволит вернуться к запросу и избранному.</p><span class="tl-step-meta">Сохранение появится в кабинете</span></li>
+    </ol>
+  </section>
+
+  <section class="tl-workspace-section" id="workspace" aria-labelledby="workspace-heading">
+    <div class="tl-container"><div class="tl-section-heading tl-workspace-heading"><div><p class="tl-eyebrow">Рабочий экран</p><h2 id="workspace-heading">Условия слева.<br>Кандидаты перед вами.</h2></div><p>Подготовленный пример из каталога. Можно раскрыть объяснение и отметить избранное на этой странице.</p></div>
+      <div class="tl-workspace">
+        <aside class="tl-app-sidebar" aria-label="Навигация образца приложения"><a class="tl-wordmark tl-app-logo" href="#main" aria-label="Tandau">{{ wordmark() }}</a><p class="tl-app-caption">Ваше событие</p><nav><a class="tl-app-active" href="#workspace" aria-current="page">{{ icon('search') }}Подбор</a><button type="button" id="show-saved">{{ icon('bookmark') }}Избранное <span id="saved-count">0</span></button><a href="#faq">{{ icon('info') }}Вопросы</a></nav><div class="tl-sidebar-request"><span>Свадьба</span><strong>Алматы</strong><p>17 октября 2026</p><div><span>Категория</span><strong>Ведущий</strong></div><div><span>Бюджет до</span><strong>1 000 000 ₸</strong></div><button class="tl-sidebar-edit" type="button" id="edit-brief">Изменить условия {{ icon('filter') }}</button></div><div class="tl-guest"><span class="tl-guest-avatar">Г</span><div>Гость<small>Сохранение на странице</small></div></div></aside>
+        <div class="tl-app-main">
+          <header class="tl-app-topbar"><div><span class="tl-app-breadcrumb">Подбор</span><span>/</span><strong>Свадьба в Алматы</strong></div><a href="/designbook?phase=3#screens">Войти {{ icon('account') }}</a></header>
+          <div class="tl-app-content">
+            <div class="tl-results-heading"><div><span class="tl-eyebrow">17 октября 2026</span><h3 id="results-heading">Три профиля для сравнения</h3></div><span class="tl-result-total">{{ example_cards|length }} профиля</span></div>
+            <div class="tl-query-strip"><span>{{ icon('location') }}Алматы</span><span>{{ icon('grid') }}Ведущий</span><span>{{ icon('wallet') }}до 1 000 000 ₸</span></div>
+            <p class="tl-static-notice">Пример интерфейса. Порядок карточек задан заранее. Бронирование недоступно.</p>
+            <div class="tl-results" id="sample-results">
+              {% for card in example_cards %}
+              <article class="tl-result" data-profile="{{ card.id }}">
+                <div class="tl-card-top"><span class="tl-profile-number">Профиль {{ '%02d'|format(loop.index) }}</span><button class="tl-save" type="button" data-save="{{ card.name }}" aria-pressed="false" aria-label="Сохранить {{ card.name }}">{{ icon('bookmark') }}</button></div>
+                <div class="tl-profile"><div class="tl-profile-initial" aria-hidden="true">{{ card.name[0] }}</div><h4>{{ card.name }}</h4><p>{{ card.category }} · {{ card.city }}</p></div>
+                <div class="tl-card-fit"><span>{{ icon("calendar") }}{{ "Свободен" if card.demo_date_available else "Занят" }} 17 октября</span><span>{{ icon("clock") }}До {{ card.hours }} часов</span></div>
+                <div class="tl-card-price"><span>Стартовая цена</span><strong><small>от</small> {{ card.price|kzt }}</strong></div>
+                <div class="tl-card-flags">{% for badge in card.badges %}<span>{{ icon('info') }}{{ t('badge.' + badge) }}</span>{% endfor %}</div>
+                <details class="tl-card-reason"{% if loop.first %} open{% endif %}><summary>Почему в подборке <span aria-hidden="true">+</span></summary><p>{{ t(card.text_key) }}</p></details>
+                <div class="tl-card-footer"><span>{{ card.id }}</span><span>Данные каталога</span></div>
+              </article>
+              {% endfor %}
+            </div>
+            <p id="saved-empty" class="tl-empty" hidden>В избранном пока нет профилей. Нажмите значок закладки в карточке.</p>
+            <div class="tl-result-bottom"><p>Цена «от» не является окончательной сметой. Состав услуги и стоимость нужно уточнять.</p><button type="button" id="show-all" hidden>Показать все профили {{ icon('arrow') }}</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tl-section tl-container tl-categories-section" id="categories">
+    <div class="tl-section-heading"><p class="tl-eyebrow">Каталог</p><h2>Кого не хватает<br>вашему событию?</h2><p>{{ stats.profiles }} профилей в {{ stats.categories }} категориях. Доступность категорий зависит от города.</p></div>
+    <div class="tl-category-list">{% for category in categories %}<button type="button" class="tl-category" data-category="{{ category.name }}"><span>{{ category.name }}</span><span class="tl-category-count">{{ category.total }}</span>{{ icon('arrow') }}</button>{% endfor %}</div>
+    <p class="tl-catalog-note">Количество рядом с категорией рассчитано по каталогу. Один профиль может оказывать несколько услуг. {{ stats.synthetic }} профилей отмечены как синтетические.</p>
+  </section>
+
+  <section class="tl-principle"><div class="tl-container"><p class="tl-eyebrow">Что показывает Tandau</p><div class="tl-principle-grid"><h2>Причину выбора.<br>И пределы данных.</h2><div><p>Если подходящих вариантов меньше трёх, подборка останется короткой. Если категории нет в каталоге города, вы увидите это прямо в результате.</p><a href="/designbook#states">Посмотреть состояния интерфейса {{ icon('arrow') }}</a></div></div><div class="tl-principle-labels"><span>{{ icon('check') }}Цена с пометкой «от»</span><span>{{ icon('check') }}Оценочные данные отмечены</span><span>{{ icon('check') }}Рекомендация с объяснением</span></div></div></section>
+
+  <section class="tl-section tl-container tl-faq-section" id="faq"><div class="tl-section-heading"><p class="tl-eyebrow">Вопросы</p><h2>Перед подбором.</h2></div><div class="tl-faq">
+      <details><summary>Нужна ли регистрация?<span aria-hidden="true">+</span></summary><p>Гостевой подбор предусмотрен без регистрации. Аккаунт нужен для истории и избранного. На этом макете отметки сохраняются только до перезагрузки страницы.</p></details>
+      <details><summary>Откуда берутся подрядчики?<span aria-hidden="true">+</span></summary><p>В демонстрации используется предоставленный каталог из {{ stats.profiles }} анонимизированных профилей. Среди них {{ stats.synthetic }} синтетических. Соответствующие пометки сохраняются на карточках.</p></details>
+      <details><summary>Можно ли сразу забронировать?<span aria-hidden="true">+</span></summary><p>Нет. Tandau помогает сравнить профили. Бронирование и оплата не входят в этот прототип.</p></details>
+      <details><summary>Почему цена указана «от»?<span aria-hidden="true">+</span></summary><p>Это стартовая цена из каталога. Итог зависит от состава услуги. Если значение проставлено при подготовке данных вместо отсутствующей цены, карточка показывает «Цена ориентировочная».</p></details>
+      <details><summary>Какие даты доступны в каталоге?<span aria-hidden="true">+</span></summary><p>Период данных с 23 сентября по 31 декабря 2026 года включительно. Дата в образце формы ограничена этим периодом.</p></details>
+    </div></section>
+  <section class="tl-final tl-container"><div><p class="tl-eyebrow">Ваш следующий шаг</p><h2>Начните с даты.<br>И бюджета.</h2></div><a class="tl-button" href="#brief">Заполнить условия {{ icon('arrow') }}</a></section>
+</main>
+<footer class="tl-footer"><div class="tl-container"><div class="tl-footer-top"><a class="tl-wordmark" href="#main" aria-label="Tandau, начало страницы">{{ wordmark() }}</a><p>Подрядчики для вашего события.</p><nav aria-label="Навигация в подвале"><a href="#how">Как работает</a><a href="#categories">Категории</a><a href="#faq">Вопросы</a><a href="/designbook">Дизайнбук</a></nav></div><div class="tl-footer-bottom"><span>Tandau · 2026</span><span>Макет интерфейса</span><a href="#main">Наверх ↑</a></div></div></footer>
+<div class="tl-toast" id="sample-status" role="status" aria-live="polite" aria-atomic="true"></div>
+<script src="/static/js/landing_sample.js" defer></script>
+</body></html>

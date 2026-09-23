@@ -12,9 +12,9 @@
 
 - Только бренд **Tandau** в интерфейсе и документах текущих задач.
 - Строгая геометрия: панели/карточки **0 px**, кнопки/поля **4 px**, бейджи **2 px**, диалоги **8 px**. Контраст, сетка и типографика важнее декоративного скругления.
-- Существующая волна `app/static/assets/tandau/fluid-card.png` остаётся рабочей по `/static/assets/tandau/fluid-card.png`.
-- Девять прежних PNG сохраняются в `app/static/assets/tandau/archive/` и не показываются в актуальном UI.
-- Пользователь создаёт **10 новых ассетов** по `docs/TANDAU_ASSET_BRIEFS.md`. Уже выбранный `fluid-card.png` не входит в десять новых файлов; новая волна из брифа — отдельная необязательная альтернатива. Ожидаемый файл не считать полученным или подключённым.
+- Чёрный `#000000`, белый и нейтральные серые заменяют прежний тёмно-синий. Макеты доступны по `/designbook` и `/designbook/landing`.
+- Десять прежних PNG сохраняются в `app/static/assets/tandau/archive/` и не показываются в актуальном UI.
+- Пользователь создаёт **16 новых ассетов** по `docs/TANDAU_ASSET_BRIEFS.md`. `fluid-card.png` теперь находится в архиве и не используется. Ожидаемый файл не считать полученным или подключённым.
 
 ## Небольшие задачи @yassmn126
 
@@ -24,7 +24,7 @@
 | --- | --- | --- | --- |
 | [#1](https://github.com/BAITC-Hacks/hack-ce6ddbc4-apex/issues/1) | [Редактура KZ/EN](issues/01-i18n-audit.md) | 35–50 мин | `app/i18n/kk.json`, `app/i18n/en.json`, `docs/qa/I18N_AUDIT.md`; при необходимости только раздел README «Языки интерфейса» |
 | [#2](https://github.com/BAITC-Hacks/hack-ce6ddbc4-apex/issues/2) | [Адаптивность и доступность](issues/02-responsive-accessibility-qa.md) | 30–45 мин | `docs/qa/UI_QA.md`, `docs/screenshots/qa/`; CSS/JS/шаблоны читать, дефекты передавать владельцу |
-| [#3](https://github.com/BAITC-Hacks/hack-ce6ddbc4-apex/issues/3) | [Проверка 10 новых ассетов Tandau](issues/03-tandau-assets.md) | 25–40 мин + ожидание | `app/static/assets/tandau/manifest.json`, новые файлы, `docs/TANDAU_ASSET_INVENTORY.md`, `docs/qa/ASSET_QA.md`; без изменения композиции/CSS |
+| [#3](https://github.com/BAITC-Hacks/hack-ce6ddbc4-apex/issues/3) | [Проверка 16 новых ассетов Tandau](issues/03-tandau-assets.md) | 25–40 мин + ожидание | `app/static/assets/tandau/manifest.json`, новые файлы, `docs/TANDAU_ASSET_INVENTORY.md`, `docs/qa/ASSET_QA.md`; без изменения композиции/CSS |
 | [#4](https://github.com/BAITC-Hacks/hack-ce6ddbc4-apex/issues/4) | [Чистый запуск и демо](issues/04-demo-readme-check.md) | 25–35 мин | `docs/DEMO_CHECKLIST.md`; основные правки README передать главному разработчику |
 
 Сначала #1 и #2. Для #3 можно подготовить ожидаемые слоты сразу; проверять изображения по получении, UI — после подключения главным разработчиком. Для #4 нужен конкретный SHA версии, готовой к показу. Переводы уже реализованы: задача — аудит и дополнение согласованных ключей, а не повторное создание локализации.

@@ -1,0 +1,20 @@
+<section class="db-section" id="cards">
+  <div class="db-section-head"><div><span class="db-kicker">Результаты подбора</span><h2>Подрядчики под ваш запрос</h2></div><p class="db-caption">Фиксированный пример из каталога. Порядок карточек не означает рейтинг.</p></div>
+  <div class="td-results-toolbar"><div><span class="td-query-name">Свадьба в Алматы</span><span class="td-query-detail">17 октября 2026 · Ведущий · 8 ч · Қазақша</span></div><div><span>Бюджет</span><strong>1 000 000 ₸</strong></div><a class="db-btn db-btn--outline" href="#fields">Изменить условия</a></div>
+  <div class="td-recommendations">
+  {% for card in example_cards %}
+    <article class="td-contractor">
+      <header><span class="td-option-number">Вариант {{ '%02d'|format(loop.index) }}</span><button type="button" class="td-save" data-save-card aria-pressed="false" aria-label="Сохранить {{ card.name }} в образце"><svg class="db-icon" aria-hidden="true"><use href="/static/assets/tandau/tandau-icons.svg#bookmark"></use></svg></button></header>
+      <div class="td-contractor-identity"><div class="td-initial" aria-hidden="true">{{ card.name[0] }}</div><div><h3>{{ card.name }}</h3><p>{{ card.category }} · {{ card.city }}</p></div></div>
+      <div class="td-contractor-price"><span>Стоимость от</span><strong>{{ card.price|kzt }}</strong></div>
+      <div class="td-price-track" aria-label="Стартовая цена занимает {{ (card.price / 10000)|int }} процентов бюджета"><span style="width:{{ [card.price / 10000,100]|min }}%"></span></div>
+      <div class="td-budget-headroom"><span>{{ 'Запас бюджета' if card.price < 1000000 else 'На границе бюджета' }}</span><strong>{{ (1000000 - card.price)|kzt if card.price < 1000000 else 'Цена может вырасти' }}</strong></div>
+      <div class="td-card-flags">{% for badge in card.badges %}<span>{{ t('badge.' + badge) }}</span>{% endfor %}</div>
+      <dl class="td-contractor-facts"><div><dt>Дата по каталогу</dt><dd>{{ '17 октября свободно' if card.demo_date_available else 'Занят 17 октября' }}</dd></div><div><dt>Длительность</dt><dd>{{ ('До ' ~ card.hours ~ ' ч') if card.hours else 'Не указана' }}</dd></div><div><dt>Языки</dt><dd>{{ card.languages|join(' · ')|capitalize }}</dd></div></dl>
+      <details class="td-evidence"><summary>Почему в подборке <span aria-hidden="true">＋</span></summary><p>{{ t(card.text_key) }}</p><p class="td-evidence-source">Профиль {{ card.id }} · Имя анонимизировано</p></details>
+      <footer>Итоговую стоимость нужно уточнить</footer>
+    </article>
+  {% endfor %}
+  </div>
+  <div class="td-results-note"><svg class="db-icon" aria-hidden="true"><use href="/static/assets/tandau/tandau-icons.svg#info"></use></svg><p>Цены и доступность взяты из предоставленного каталога. Иллюстрации, рейтинги и отзывы подрядчиков не добавлялись. Сохранение в образце действует до перезагрузки.</p></div>
+</section>

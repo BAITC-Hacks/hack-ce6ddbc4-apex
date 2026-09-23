@@ -30,7 +30,7 @@
       "height_px": 240,
       "background": "#FFFFFF",
       "label": "Document sheets",
-      "suggested_use": "Brief intake and structured project information",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "002a1b43f33e1ecf8e1013419877bb5b40421d2722aaa9d5112198b14a10606f",
       "status": "archived_reference_not_displayed"
@@ -50,7 +50,7 @@
       "height_px": 240,
       "background": "#FAFAFB",
       "label": "Broken chain",
-      "suggested_use": "Explain gaps or missing requirements; do not imply successful connection",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "f9fd9eeb86e46c4e838111e8357f1ab964f9ac43e7b0cc39deb1dcbfa95bdf8e",
       "status": "archived_reference_not_displayed"
@@ -70,7 +70,7 @@
       "height_px": 240,
       "background": "#FFFFFF",
       "label": "Cube with prohibition ring",
-      "suggested_use": "Unsupported or blocked state; do not use as a success or trust badge",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "25f0904ccc9d91669582388d5e195edca9c201ceeb4d44220695fea967e63cff",
       "status": "archived_reference_not_displayed"
@@ -90,7 +90,7 @@
       "height_px": 240,
       "background": "#FFFFFF",
       "label": "Circular timer",
-      "suggested_use": "Fast shortlist / delivery time",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "f6e37b7b02519bcbeddf5df423c72b3eb948cae09c7fd341e5d9e141ada739af",
       "status": "archived_reference_not_displayed"
@@ -110,7 +110,7 @@
       "height_px": 240,
       "background": "#FAFAFB",
       "label": "Stacked blue and grey rounded slabs",
-      "suggested_use": "Comparison and layered evidence",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "326a988b5b9102eebda764caf40204e86ffa566b6cd00871d2130e5159a43c39",
       "status": "archived_reference_not_displayed"
@@ -130,7 +130,7 @@
       "height_px": 240,
       "background": "#FFFFFF",
       "label": "Four rounded blocks",
-      "suggested_use": "Categories and dashboard modules",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "48b1382ce0e2ec7fa74c4fd1ffabb46db9a63d613c0770040d1eaef8cc86f839",
       "status": "archived_reference_not_displayed"
@@ -150,7 +150,7 @@
       "height_px": 380,
       "background": "mixed white and translucent blue",
       "label": "Blue glass wave",
-      "suggested_use": "Archived pale-wave reference; replaced by fluid-card.png in current hero, authentication samples, screen samples and gallery.",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "2819da797ef51c891c271b0e623ea08ca92b96f799f6a7d088b938eca8c64e76",
       "status": "archived_reference_not_displayed"
@@ -170,7 +170,7 @@
       "height_px": 1080,
       "background": "mixed blue",
       "label": "Narrow blue glass edge",
-      "suggested_use": "Decorative edge only; native width is 200 pixels",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "87ae826e309955dc8b3be1560da50fd4887025fde703ec7b76fc015a6437b1fa",
       "status": "archived_reference_not_displayed"
@@ -190,14 +190,14 @@
       "height_px": 180,
       "background": "#2B5FE3",
       "label": "Cobalt grid with crosses",
-      "suggested_use": "Decorative blue band",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
       "extraction": "Lossless rectangular extraction from flattened PDF page; no background removal, recoloring or resampling.",
       "sha256": "582f1a4696f45fe85decd703251e81c2adbce995ce011febf592ea1135179967",
       "status": "archived_reference_not_displayed"
     },
     {
       "id": "fluid-card",
-      "file": "fluid-card.png",
+      "file": "archive/fluid-card.png",
       "source_path": "/Users/k4ssym/Downloads/fluid-card.png",
       "source_type": "Locally supplied original artwork visually matched to the user screenshot; not newly exported from live Figma.",
       "figma_node_id": null,
@@ -208,9 +208,9 @@
       "has_alpha": false,
       "size_bytes": 1869098,
       "background": "opaque pale background with saturated blue glass waves",
-      "label": "Selected bright blue wave background",
-      "suggested_use": "Current designbook hero, authentication samples, screen samples and gallery; preserve proportions with layout cropping.",
-      "status": "active_selected_background",
+      "label": "Archived blue wave background",
+      "suggested_use": "Archived source reference. Not displayed in current Tandau pages.",
+      "status": "archived_reference_not_displayed",
       "selected_on": "2026-09-23",
       "import": "Byte-for-byte copy of the local source; no recoloring, background removal or resampling.",
       "sha256": "e61c0756f36a9d631e8443287d8f0351d5c104cf127d469b44ef1f4752fb7fe3"
@@ -392,7 +392,7 @@
       "height_px": 1080
     }
   ],
-  "requested_assets": "asset-briefs.json; ten pending user-generated files, not delivered images",
+  "requested_assets": "asset-briefs.json; sixteen pending user-generated production objects and 3D icons",
   "ui_icon_library": {
     "file": "tandau-icons.svg",
     "status": "ready",

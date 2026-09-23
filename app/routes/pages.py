@@ -39,6 +39,10 @@ def _example_cards(catalog) -> list[dict]:
             "price": profile.price_from_kzt,
             "badges": badges,
             "text_key": text_key,
+            "hours": profile.max_hours,
+            "languages": profile.languages,
+            "event_formats": profile.event_formats,
+            "demo_date_available": "2026-10-17" not in profile.busy_dates,
         })
     return cards
 
@@ -64,10 +68,25 @@ def designbook(request: Request):
         "designbook.html",
         stats=catalog.stats(),
         example_cards=_example_cards(catalog),
+        categories=catalog.category_rows(),
         asset_briefs=json.loads(
             (Path(__file__).resolve().parents[1] / "static/assets/tandau/asset-briefs.json")
             .read_text(encoding="utf-8")
         ),
+        t=lambda key, **values: translate("ru", key, **values),
+    )
+
+
+@router.get("/designbook/landing", response_class=HTMLResponse, include_in_schema=False)
+def landing_sample(request: Request):
+    """Full-page design specimen with local-only controls and fixed examples."""
+    catalog = request.app.state.catalog
+    return render(
+        request,
+        "landing_sample.html",
+        stats=catalog.stats(),
+        categories=catalog.category_rows(),
+        example_cards=_example_cards(catalog),
         t=lambda key, **values: translate("ru", key, **values),
     )
 

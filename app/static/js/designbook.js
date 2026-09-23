@@ -32,6 +32,8 @@
   const tabs = [...document.querySelectorAll('[data-phase]')];
   function selectPhase(number, focus = false) { tabs.forEach(tab => { const active = tab.dataset.phase === String(number); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; document.getElementById(tab.getAttribute('aria-controls')).hidden = !active; if (active && focus) tab.focus(); }); }
   tabs.forEach((tab, index) => { tab.addEventListener('click', () => selectPhase(tab.dataset.phase)); tab.addEventListener('keydown', event => { let next; if (event.key === 'ArrowRight') next = (index + 1) % tabs.length; if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length; if (event.key === 'Home') next = 0; if (event.key === 'End') next = tabs.length - 1; if (next !== undefined) { event.preventDefault(); selectPhase(tabs[next].dataset.phase, true); } }); });
+  const requestedPhase = new URLSearchParams(location.search).get('phase');
+  if (tabs.some(tab => tab.dataset.phase === requestedPhase)) selectPhase(requestedPhase);
   document.querySelectorAll('[data-go-phase]').forEach(button => button.addEventListener('click', event => { event.preventDefault(); selectPhase(button.dataset.goPhase, true); document.getElementById('screens').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block:'start'}); }));
   document.querySelectorAll('[data-calendar-day]').forEach(button => button.addEventListener('click', () => { document.querySelectorAll('[data-calendar-day]').forEach(item => item.setAttribute('aria-pressed', String(item === button))); announce(`${button.dataset.calendarDay} октября выбрано в образце календаря.`); }));
   const navLinks = [...document.querySelectorAll('.db-sidebar nav a')];
