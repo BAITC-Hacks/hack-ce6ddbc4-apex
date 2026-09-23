@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="{{ html_lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Tandau{% endblock %}</title>
+  <meta name="description" content="{{ t('meta.description') }}">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">{{ t('common.skip_to_content') }}</a>
+  {% include "partials/header.html" %}
+  <main id="main" class="page">
+    {% block content %}{% endblock %}
+  </main>
+  {% include "partials/footer.html" %}
+  <script src="/static/js/app.js" defer></script>
+</body>
+</html>

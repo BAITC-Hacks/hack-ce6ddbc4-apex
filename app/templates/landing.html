@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Tandau — {{ t('landing.hero.title_short') }}{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container">
+    <p class="eyebrow"><span class="signal" aria-hidden="true"></span>{{ t('landing.prototype') }}</p>
+    <h1 class="hero__title">{{ t('landing.hero.title') }}</h1>
+    <p class="hero__subtitle">{{ t('landing.hero.subtitle') }}</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary btn--lg" href="/app">{{ t('landing.hero.cta_primary') }} <span aria-hidden="true">↗</span></a>
+      <a class="btn btn--ghost btn--lg" href="/register">{{ t('landing.hero.cta_secondary') }}</a>
+    </div>
+    <p class="hero__stats">
+      {{ t('landing.hero.stats', profiles=stats.profiles, categories=stats.categories, cities=stats.cities, days=stats.days) }}
+    </p>
+  </div>
+</section>
+
+<section id="how" class="section">
+  <div class="container">
+    <h2 class="section__title">{{ t('landing.how.title') }}</h2>
+    <ol class="steps">
+      {% for i in [1, 2, 3] %}
+      <li class="step card">
+        <span class="step__num" aria-hidden="true">{{ i }}</span>
+        <h3 class="step__title">{{ t('landing.how.step' ~ i ~ '.title') }}</h3>
+        <p class="step__text">{{ t('landing.how.step' ~ i ~ '.text') }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <h2 class="section__title">{{ t('landing.example.title') }}</h2>
+    <p class="eyebrow">{{ t('landing.example.note') }}</p>
+    <p class="example-query">{{ t('landing.example.query') }}</p>
+    <div class="cards-grid">
+      {% for c in example_cards %}
+      <article class="card result-card">
+        <header class="result-card__head">
+          <div class="result-card__monogram" aria-hidden="true">{{ c.name[:1] }}</div>
+          <h3 class="result-card__name">{{ c.name }}</h3>
+          <p class="result-card__meta">{{ label('category', c.category) }} · {{ label('city', c.city) }}</p>
+          <p class="result-card__price">{{ t('card.price_from', price=(c.price | kzt)) }}</p>
+          {% for b in c.badges %}<span class="badge badge--{{ b }}">{{ t('badge.' ~ b) }}</span>{% endfor %}
+        </header>
+        <p class="result-card__text">{{ t(c.text_key) }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section__title">{{ t('landing.honesty.title') }}</h2>
+    <ul class="outcomes">
+      <li class="banner banner--found"><span class="banner__icon" aria-hidden="true">✓</span>{{ t('landing.honesty.found') }}</li>
+      <li class="banner banner--nocat"><span class="banner__icon" aria-hidden="true">i</span>{{ t('landing.honesty.nocat') }}</li>
+      <li class="banner banner--none"><span class="banner__icon" aria-hidden="true">!</span>{{ t('landing.honesty.none') }}</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <h2 class="section__title">{{ t('landing.stats.title') }}</h2>
+    <dl class="stats">
+      <div class="stat"><dt>{{ t('landing.stats.profiles') }}</dt><dd>{{ stats.profiles }}</dd></div>
+      <div class="stat"><dt>{{ t('landing.stats.categories') }}</dt><dd>{{ stats.categories }}</dd></div>
+      <div class="stat"><dt>{{ t('landing.stats.cities') }}</dt><dd>{{ stats.cities }}</dd></div>
+      <div class="stat"><dt>{{ t('landing.stats.days') }}</dt><dd>{{ stats.days }}</dd></div>
+      <div class="stat"><dt>{{ t('landing.stats.synthetic') }}</dt><dd>{{ stats.synthetic }}</dd></div>
+    </dl>
+    <h3 class="subsection__title">{{ t('landing.categories.title') }}</h3>
+    <ul class="chips">
+      {% for cat in categories %}
+      <li class="chip" title="{% for city, n in cat.by_city.items() %}{{ label('city', city) }}: {{ n }} {% endfor %}">
+        {{ label('category', cat.name) }} <span class="chip__count">{{ cat.total }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container faq">
+    <h2 class="section__title">{{ t('landing.faq.title') }}</h2>
+    {% for i in [1, 2, 3, 4] %}
+    <details class="faq__item">
+      <summary>{{ t('landing.faq.q' ~ i) }}</summary>
+      <p>{{ t('landing.faq.a' ~ i, profiles=stats.profiles, synthetic=stats.synthetic) }}</p>
+    </details>
+    {% endfor %}
+    <p class="faq__cta"><a class="btn btn--primary" href="/app">{{ t('landing.hero.cta_primary') }}</a></p>
+  </div>
+</section>
+
+{% endblock %}

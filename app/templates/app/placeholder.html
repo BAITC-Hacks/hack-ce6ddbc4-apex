@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ t('auth.placeholder.title' if placeholder_kind == 'auth' else 'app.placeholder.title') }} — Tandau{% endblock %}
+{% block content %}
+<section class="section"><div class="container placeholder">
+  <p class="eyebrow">{{ t('landing.prototype') }}</p>
+  <h1>{{ t('auth.placeholder.title' if placeholder_kind == 'auth' else 'app.placeholder.title') }}</h1>
+  <p class="muted">{{ t('auth.placeholder.text' if placeholder_kind == 'auth' else 'app.placeholder.text') }}</p>
+  <a class="btn btn--primary" href="/">{{ t('common.back_home') }} <span aria-hidden="true">↗</span></a>
+</div></section>
+{% endblock %}

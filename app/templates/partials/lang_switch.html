@@ -1,0 +1,6 @@
+<div class="lang-switch" role="group" aria-label="{{ t('nav.language') }}">
+  {% for code, label in [('ru', 'Рус'), ('kk', 'Қаз'), ('en', 'Eng')] %}
+    <a href="/lang/{{ code }}" class="lang-switch__item {% if lang == code %}is-active{% endif %}"
+       {% if lang == code %}aria-current="true"{% endif %} hreflang="{{ code }}">{{ label }}</a>
+  {% endfor %}
+</div>
