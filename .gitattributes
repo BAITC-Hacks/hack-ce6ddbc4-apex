@@ -1,0 +1,2 @@
+# Preserve the organiser's original CSV bytes, including CRLF line endings.
+data/hackathon-dataset-anonymized.csv -text whitespace=cr-at-eol
