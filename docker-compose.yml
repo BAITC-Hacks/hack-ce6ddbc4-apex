@@ -1,0 +1,27 @@
+services:
+  tandau:
+    build:
+      context: .
+      args:
+        WITH_LLM: "0"
+    image: tandau:1.0
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-}
+      DATABASE_PATH: var/tandau.db
+      LLM_MODE: ${LLM_MODE:-off}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+    volumes:
+      - tandau-var:/srv/tandau/var
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  tandau-var:
