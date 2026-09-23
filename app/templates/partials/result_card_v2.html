@@ -1,0 +1,34 @@
+{# Фаза 5: карточка v2 — объяснение, бейджи, метка сравнения «вошёл/выпал/остался», раскрывашка балла.
+   На /app переменной labels нет — метка просто не рисуется. #}
+{% set diff = labels.get(card.id) if labels is defined and labels else none %}
+<article class="result-card{% if diff %} result-card--{{ diff[0] }}{% endif %}" aria-labelledby="card-{{ card.id }}-name" data-id="{{ card.id }}">
+  <header class="result-card__head">
+    <h3 class="result-card__name" id="card-{{ card.id }}-name">{{ card.name }}</h3>
+    <p class="result-card__meta">{{ label('category', card.category) }} · {{ label('city', card.city) }}</p>
+    <p class="result-card__price">{{ t('card.price_from', price=(card.price_from_kzt | kzt)) }}</p>
+    {% if diff or card.badges %}
+    <p class="result-card__badges">
+      {% if diff %}<span class="p5-badge p5-badge--{{ diff[0] }}">{{ diff[1] }}</span>{% endif %}
+      {% for b in card.badges %}<span class="p5-badge p5-badge--{{ b }}">{{ t('badge.' ~ b) }}</span>{% endfor %}
+    </p>
+    {% endif %}
+  </header>
+  <p class="result-card__text">{{ card.explanation }}</p>
+  {% if card.score_breakdown %}
+  <details class="score">
+    <summary>{{ t('explain.score.title', total='%.2f' | format(card.score)) }}</summary>
+    <table class="score__table">
+      <thead><tr><th scope="col">{{ t('explain.score.factor') }}</th><th scope="col">{{ t('explain.score.value') }}</th>
+        <th scope="col">{{ t('explain.score.weight') }}</th><th scope="col">{{ t('explain.score.contribution') }}</th></tr></thead>
+      <tbody>
+      {% for name, weight in SCORE_WEIGHTS.items() %}
+        {% set value = card.score_breakdown.get(name, 0) %}
+        <tr><th scope="row">{{ t('explain.score.' ~ name) }}</th><td>{{ '%.2f' | format(value) }}</td>
+          <td>{{ '%+.2f' | format(weight) }}</td><td>{{ '%+.3f' | format(value * weight) }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <p class="score__note">{{ t('explain.score.note') }}</p>
+  </details>
+  {% endif %}
+</article>

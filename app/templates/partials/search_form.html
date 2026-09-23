@@ -1,0 +1,84 @@
+{% from "partials/icons.html" import icon %}
+{% macro error(name) -%}
+  {% if field_errors[name] %}<p class="field__error" id="err-{{ name }}">{{ field_errors[name] }}</p>{% endif %}
+{%- endmacro %}
+{% macro described(name, hint_id='') -%}
+  {% if field_errors[name] %}aria-invalid="true" aria-describedby="err-{{ name }}"{% elif hint_id %}aria-describedby="{{ hint_id }}"{% endif %}
+{%- endmacro %}
+{% set more_open = form.duration or form.language or field_errors.duration_h or field_errors.language %}
+<form class="search-form" method="get" action="/app#results" data-search-form>
+  <h2 class="search-form__title">{{ t('form.title') }}</h2>
+
+  <div class="field{% if field_errors.city %} field--invalid{% endif %}">
+    <label class="field__label" for="f-city">{{ t('form.city') }}</label>
+    <select class="field__control" id="f-city" name="city" required {{ described('city') }}>
+      {% if not form.city %}<option value="" selected disabled>—</option>{% endif %}
+      {% for c in meta.cities %}<option value="{{ c }}"{% if form.city == c %} selected{% endif %}>{{ label('city', c) }}</option>{% endfor %}
+      {% if form.city and form.city not in meta.cities %}<option value="{{ form.city }}" selected>{{ form.city }}</option>{% endif %}
+    </select>
+    {{ error('city') }}
+  </div>
+
+  <div class="field{% if field_errors.date %} field--invalid{% endif %}">
+    <label class="field__label" for="f-date">{{ t('form.date') }}</label>
+    <input class="field__control" id="f-date" name="date" type="date" required value="{{ form.date }}"
+           min="{{ meta.window.start }}" max="{{ meta.window.end }}" {{ described('date', 'hint-date') }}>
+    <p class="field-help search-form__hint" id="hint-date">{{ t('form.date_hint', start=meta.window.start, end=meta.window.end) }}</p>
+    {{ error('date') }}
+  </div>
+
+  <div class="field{% if field_errors.event_type %} field--invalid{% endif %}">
+    <label class="field__label" for="f-type">{{ t('form.event_type') }}</label>
+    <select class="field__control" id="f-type" name="event_type" required {{ described('event_type') }}>
+      {% if not form.event_type %}<option value="" selected disabled>—</option>{% endif %}
+      {% for f in meta.event_formats %}<option value="{{ f }}"{% if form.event_type == f %} selected{% endif %}>{{ label('format', f) }}</option>{% endfor %}
+      {% if form.event_type and form.event_type not in meta.event_formats %}<option value="{{ form.event_type }}" selected>{{ form.event_type }}</option>{% endif %}
+    </select>
+    {{ error('event_type') }}
+  </div>
+
+  <div class="field{% if field_errors.category %} field--invalid{% endif %}">
+    <label class="field__label" for="f-cat">{{ t('form.category') }}</label>
+    <select class="field__control" id="f-cat" name="category" required {{ described('category') }}>
+      {% if not form.category %}<option value="" selected disabled>—</option>{% endif %}
+      {% set ns = namespace(known=false) %}
+      {% for row in meta.categories %}{% if form.category == row.name %}{% set ns.known = true %}{% endif %}<option value="{{ row.name }}"{% if form.category == row.name %} selected{% endif %}>{{ label('category', row.name) }} ({{ row.total }})</option>{% endfor %}
+      {% if form.category and not ns.known %}<option value="{{ form.category }}" selected>{{ form.category }}</option>{% endif %}
+    </select>
+    {{ error('category') }}
+  </div>
+
+  <div class="field{% if field_errors.budget_kzt %} field--invalid{% endif %}">
+    <label class="field__label" for="f-budget">{{ t('form.budget') }}</label>
+    <input class="field__control" id="f-budget" name="budget" type="text" inputmode="numeric" autocomplete="off" required
+           value="{{ form.budget }}" {{ described('budget_kzt', 'hint-budget') }}>
+    <p class="field-help search-form__hint" id="hint-budget">{{ t('form.budget_hint') }}</p>
+    {{ error('budget_kzt') }}
+  </div>
+
+  <details class="more-conditions"{% if more_open %} open{% endif %}>
+    <summary>{{ t('form.more_conditions') }}</summary>
+    <div class="more-conditions__body">
+      <div class="field{% if field_errors.duration_h %} field--invalid{% endif %}">
+        <label class="field__label" for="f-dur">{{ t('form.duration') }} <span class="muted">({{ t('form.optional') }})</span></label>
+        <input class="field__control" id="f-dur" name="duration" type="number" min="1" max="24" step="1" inputmode="numeric"
+               value="{{ form.duration }}" {{ described('duration_h') }}>
+        {{ error('duration_h') }}
+      </div>
+      <div class="field{% if field_errors.language %} field--invalid{% endif %}">
+        <label class="field__label" for="f-lang">{{ t('form.language') }} <span class="muted">({{ t('form.optional') }})</span></label>
+        <select class="field__control" id="f-lang" name="language" {{ described('language') }}>
+          <option value="">{{ t('form.language_any') }}</option>
+          {% for l in meta.languages %}<option value="{{ l }}"{% if form.language == l %} selected{% endif %}>{{ label('language', l) }}</option>{% endfor %}
+          {% if form.language and form.language not in meta.languages %}<option value="{{ form.language }}" selected>{{ form.language }}</option>{% endif %}
+        </select>
+        {{ error('language') }}
+      </div>
+    </div>
+  </details>
+
+  <div class="search-form__actions">
+    <button class="btn btn--primary" type="submit">{{ t('form.submit') }}{{ icon('search') }}</button>
+    <a class="btn btn--ghost" href="/app">{{ t('form.reset') }}</a>
+  </div>
+</form>

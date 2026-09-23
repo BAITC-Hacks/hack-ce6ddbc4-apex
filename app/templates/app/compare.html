@@ -31,7 +31,7 @@
         <h2 class="compare-col__title" id="col-{{ side }}">{{ t('compare.column', date=short_date(day)) }}</h2>
         <p class="p5-banner p5-banner--{{ {'found':'found','partial':'partial','no_category_in_city':'nocat','none_match':'none','invalid_request':'invalid'}[resp.status] }}">
           <span class="p5-banner__icon" aria-hidden="true">{{ {'found':'✓','partial':'!','none_match':'!'}.get(resp.status, 'i') }}</span>{{ resp.summary }}</p>
-        {% for card in resp.cards %}{% include "partials/result_card.html" %}{% endfor %}
+        {% for card in resp.cards %}{% include "partials/result_card_v2.html" %}{% endfor %}
         {% include "partials/why_not.html" %}
       </section>
       {% endfor %}

@@ -1,0 +1,20 @@
+{% from "partials/icons.html" import icon %}
+{% set kind = {'found': 'found', 'partial': 'partial', 'no_category_in_city': 'nocat', 'none_match': 'none', 'invalid_request': 'invalid'}.get(resp.status, 'invalid') %}
+{% set glyph = {'found': 'check', 'partial': 'info', 'no_category_in_city': 'location', 'none_match': 'filter', 'invalid_request': 'close'}.get(resp.status, 'info') %}
+{% if resp.status == 'partial' and resp.cards|length == 1 %}
+  {% set title = t('status.partial.title_one') %}
+{% else %}
+  {% set title = t('status.' ~ resp.status ~ '.title', n=resp.cards|length) %}
+{% endif %}
+<div class="banner banner--{{ kind }}" role="status" aria-live="polite" data-status="{{ resp.status }}">
+  <span class="banner__icon">{{ icon(glyph) }}</span>
+  <div class="banner__body">
+    <p class="banner__title">{{ title }}</p>
+    <p class="banner__text">{{ resp.summary }}</p>
+    {% if city_links %}
+    <p class="banner__actions">
+      {% for p in city_links %}<a class="btn btn--ghost banner__action" href="{{ p.href }}">{{ t('search.try_city', city=label('city', p.city), n=p.n) }}</a>{% endfor %}
+    </p>
+    {% endif %}
+  </div>
+</div>

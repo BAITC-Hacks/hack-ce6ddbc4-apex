@@ -40,7 +40,7 @@ def request_labels(req: SearchRequest, tr: Translator) -> dict:
 def recommend(catalog: Catalog, req: SearchRequest, tr: Translator) -> SearchResponse:
     errors = validate(req, catalog.categories)
     if errors:
-        return _invalid(req, errors, tr)
+        return invalid_response(req, errors, tr)
     ctx = request_labels(req, tr)
     total = sum(catalog.category_city_counts.get(req.category, {}).values())
     pool = catalog.in_category_city(req.category, req.city)            # порядок CSV
@@ -156,6 +156,9 @@ def _no_category(catalog: Catalog, req: SearchRequest, tr: Translator, ctx: dict
     items = [tr("search.other_city.item_synthetic" if p["synthetic"] else "search.other_city.item",
                 city=label(tr, "city", p["city"]), n=p["n"], m=p["synthetic"]) for p in places]
     hints = build_hints(catalog, req, "no_category_in_city", 0, tr)     # [P5] other_city со ссылками
+    for h in hints:
+        if h["type"] == "other_city":
+            h["places"] = places                                         # фаза 4: /app рисует ссылки по places
     if places:
         summary = tr("search.summary.no_category_in_city", places="; ".join(items), **ctx)
     else:
@@ -170,16 +173,25 @@ def _window_labels() -> dict:
     return {"start": f"{s[2]}.{s[1]}", "end": f"{e[2]}.{e[1]}.{e[0]}"}
 
 
-def _invalid(req: SearchRequest, errors: list[dict], tr: Translator) -> SearchResponse:
+def _error_key(e: dict) -> str:
+    if e["code"] in ("required", "duplicate"):
+        return f"form.error.{e['code']}"
+    return f"form.error.{e['field']}.{e['code']}"
+
+
+def invalid_response(req: SearchRequest, errors: list[dict], tr: Translator) -> SearchResponse:
+    """invalid_request response for validation errors ({field, code, value}); hints = one fix per error."""
     hints = []
     for e in errors:
-        field_label = tr(FIELD_LABEL_KEYS[e["field"]])
-        key = "form.error.required" if e["code"] == "required" else f"form.error.{e['field']}.{e['code']}"
-        text = tr(key, value=e["value"], field=field_label, **_window_labels())
+        field_label = tr(FIELD_LABEL_KEYS.get(e["field"], e["field"]))
+        text = tr(_error_key(e), value=e.get("value", ""), field=field_label, **_window_labels())
         hints.append({"type": "fix", "field": e["field"], "code": e["code"], "text": text})
     summary = tr("search.summary.invalid_request", errors=". ".join(h["text"] for h in hints))
     return SearchResponse(status="invalid_request", summary=summary, hints=hints,
                           meta=_meta(req, primary_counts={}))
+
+
+_invalid = invalid_response        # spec name
 
 
 def _meta(req: SearchRequest, primary_counts: dict) -> dict:

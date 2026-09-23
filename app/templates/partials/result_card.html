@@ -1,34 +1,79 @@
-{# Фаза 5: карточка v2 — объяснение, бейджи, метка сравнения «вошёл/выпал/остался», раскрывашка балла.
-   На /app переменной labels нет — метка просто не рисуется. #}
-{% set diff = labels.get(card.id) if labels is defined and labels else none %}
-<article class="result-card{% if diff %} result-card--{{ diff[0] }}{% endif %}" aria-labelledby="card-{{ card.id }}-name" data-id="{{ card.id }}">
-  <header class="result-card__head">
-    <h3 class="result-card__name" id="card-{{ card.id }}-name">{{ card.name }}</h3>
-    <p class="result-card__meta">{{ label('category', card.category) }} · {{ label('city', card.city) }}</p>
-    <p class="result-card__price">{{ t('card.price_from', price=(card.price_from_kzt | kzt)) }}</p>
-    {% if diff or card.badges %}
-    <p class="result-card__badges">
-      {% if diff %}<span class="p5-badge p5-badge--{{ diff[0] }}">{{ diff[1] }}</span>{% endif %}
-      {% for b in card.badges %}<span class="p5-badge p5-badge--{{ b }}">{{ t('badge.' ~ b) }}</span>{% endfor %}
-    </p>
-    {% endif %}
+{% from "partials/icons.html" import icon %}
+{% set n_cards = resp.cards|length %}
+{% set facts = card_facts.get(card.id, {}) %}
+{% set view = card_view.get(card.id, {'pct': 0, 'margin': 0, 'equal': false}) %}
+<article class="result-card" aria-labelledby="card-{{ card.id }}" data-id="{{ card.id }}">
+  <header class="result-card__top">
+    <p class="result-card__position"><span aria-hidden="true">{{ '%02d'|format(rank) }}</span><span class="visually-hidden">{{ t('result.position', rank=rank, n=n_cards) }}</span></p>
+    {% with cid=card.id, cname=card.name %}{% include "partials/fav_button.html" ignore missing %}{% endwith %}
   </header>
+  <div class="result-card__identity">
+    <span class="result-card__initial" aria-hidden="true">{{ card.name[:1]|upper }}</span>
+    <div class="result-card__who">
+      <h3 id="card-{{ card.id }}" class="result-card__name">{% if profiles_enabled %}<a href="/contractors/{{ card.id }}?date={{ resp.meta.request.date }}">{{ card.name }}</a>{% else %}{{ card.name }}{% endif %}</h3>
+      <p class="result-card__meta">{{ label('category', card.category) }} · {{ label('city', card.city) }}</p>
+    </div>
+  </div>
+
+  <div class="result-card__price-block">
+    <p class="result-card__price">{{ t('result.price_from', price=card.price_from_kzt|kzt) }}</p>
+    <p class="result-card__budget">
+      {% if view.equal %}{{ t('result.budget.equal') }}{% else %}{{ t('result.budget.headroom', margin=view.margin|kzt) }}{% endif %}
+    </p>
+    <div class="price-track" role="img" aria-label="{{ t('result.budget_share', pct=view.pct) }}">
+      <span class="price-track__fill" style="width: {{ view.pct }}%"></span>
+    </div>
+    {% if card.badges %}
+    <ul class="result-card__badges">
+      {% for b in card.badges %}<li class="result-badge result-badge--{{ b }}">{{ icon('info') if b in ('price_imputed', 'city_imputed') else icon('eye') if b == 'synthetic' else icon('wallet') }}<span>{{ t('badge.' ~ b) }}</span></li>{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+
   <p class="result-card__text">{{ card.explanation }}</p>
-  {% if card.score_breakdown %}
-  <details class="score">
-    <summary>{{ t('explain.score.title', total='%.2f' | format(card.score)) }}</summary>
-    <table class="score__table">
-      <thead><tr><th scope="col">{{ t('explain.score.factor') }}</th><th scope="col">{{ t('explain.score.value') }}</th>
-        <th scope="col">{{ t('explain.score.weight') }}</th><th scope="col">{{ t('explain.score.contribution') }}</th></tr></thead>
+
+  <dl class="result-facts">
+    <div class="result-facts__cell">
+      <dt>{{ icon('calendar') }}{{ t('result.fact.date') }}</dt>
+      <dd>{{ t('result.fact.date_free', date=req_labels.get('date', '')) }}</dd>
+    </div>
+    {% if facts.languages %}
+    <div class="result-facts__cell">
+      <dt>{{ icon('grid') }}{{ t('result.fact.languages') }}</dt>
+      <dd>{% for l in facts.languages %}{{ label('language', l) }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+    </div>
+    {% endif %}
+    <div class="result-facts__cell">
+      <dt>{{ icon('clock') }}{{ t('result.fact.duration') }}</dt>
+      <dd>{% if facts.max_hours %}{{ t('result.fact.duration_value', max=facts.max_hours) }}{% else %}{{ t('result.fact.duration_unknown') }}{% endif %}</dd>
+    </div>
+    {% if facts.formats %}
+    <div class="result-facts__cell">
+      <dt>{{ icon('bookmark') }}{{ t('result.fact.formats') }}</dt>
+      <dd>{% for f in facts.formats %}{{ label('format', f) }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+    </div>
+    {% endif %}
+  </dl>
+
+  <details class="result-card__why">
+    <summary>{{ t('search.score.title') }}</summary>
+    <table class="score-table">
       <tbody>
-      {% for name, weight in SCORE_WEIGHTS.items() %}
-        {% set value = card.score_breakdown.get(name, 0) %}
-        <tr><th scope="row">{{ t('explain.score.' ~ name) }}</th><td>{{ '%.2f' | format(value) }}</td>
-          <td>{{ '%+.2f' | format(weight) }}</td><td>{{ '%+.3f' | format(value * weight) }}</td></tr>
+      {% for name, weight in resp.meta.weights.items() %}
+      <tr><th scope="row">{{ t('search.score.' ~ name) }}</th>
+          <td>{{ '%.2f'|format(card.score_breakdown.get(name, 0) or 0) }} × {{ weight }}</td></tr>
       {% endfor %}
+      <tr><th scope="row">{{ t('search.score.format_in_description') }}</th>
+          <td>{{ t('search.score.yes') if card.score_breakdown.get('format_in_description') else t('search.score.no') }}</td></tr>
+      <tr class="score-table__total"><th scope="row">{{ t('search.score.total') }}</th>
+          <td>{{ '%.2f'|format(card.score) }}</td></tr>
       </tbody>
     </table>
-    <p class="score__note">{{ t('explain.score.note') }}</p>
+    <p class="result-card__order">{{ t('search.score.order', rank=rank, n=n_cards) }}</p>
   </details>
-  {% endif %}
+
+  <footer class="result-card__foot">
+    <span>{{ t('result.profile_id', id=card.id) }}</span>
+    <span>{{ t('result.price_note') }}</span>
+  </footer>
 </article>

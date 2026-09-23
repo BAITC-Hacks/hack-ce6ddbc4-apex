@@ -1,0 +1,11 @@
+<section class="funnel-block" aria-labelledby="funnel-title">
+  <h3 id="funnel-title" class="funnel-block__title">{{ t('search.funnel.title') }}</h3>
+  <ol class="funnel">
+    {% for s in resp.funnel if s['applied'] %}
+    <li class="funnel__step{% if s['n'] == 0 %} funnel__step--zero{% endif %}">
+      <span class="funnel__n">{{ s['n'] }}</span>
+      <span class="funnel__label">{{ s['label'] }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+</section>

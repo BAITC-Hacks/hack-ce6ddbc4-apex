@@ -1,3 +1,5 @@
+"""Domain records shared by the catalog and the matching engine."""
+
 from __future__ import annotations
 
 import json
@@ -8,12 +10,12 @@ Status = Literal["found", "partial", "no_category_in_city", "none_match", "inval
 ReasonCode = Literal["busy", "format", "budget", "language", "duration"]
 
 STATUSES: tuple[str, ...] = ("found", "partial", "no_category_in_city", "none_match", "invalid_request")
-REASON_ORDER: tuple[str, ...] = ("busy", "format", "budget", "language", "duration")   # порядок воронки
+REASON_ORDER: tuple[str, ...] = ("busy", "format", "budget", "language", "duration")   # funnel order
 MAX_CARDS = 3
 
 
 @dataclass(frozen=True)
-class Contractor:                       # фаза 1 — без изменений
+class Contractor:
     id: str
     name: str
     categories: tuple[str, ...]
@@ -29,10 +31,12 @@ class Contractor:                       # фаза 1 — без изменени
     price_imputed: bool
 
     def is_free(self, date_iso: str) -> bool:
+        """Check a date within the published calendar window."""
         return date_iso not in self.busy_dates
 
     def has_category(self, category: str) -> bool:
-        return category in self.categories          # по элементу: «Ведущий» ≠ «Ведущий церемонии»
+        # Exact list membership: a ceremony host is not a general event host.
+        return category in self.categories
 
 
 @dataclass(frozen=True)
@@ -44,27 +48,26 @@ class SearchRequest:
     budget_kzt: int
     duration_h: Optional[int] = None
     language: Optional[str] = None
-    wishes: Optional[str] = None        # v1 хранится, в балл войдёт в фазе 5 (relevance)
-    lang: str = "ru"                    # язык текстов ответа
+    wishes: Optional[str] = None        # stored in v1; never placed into URLs (Phase 1 privacy rule)
+    lang: str = "ru"                    # language of response texts
 
     def to_dict(self) -> dict:
         return asdict(self)
 
     def canonical_json(self) -> str:
-        """Ключ для истории (фаза 6): без lang — язык не меняет подбор."""
+        """History key (phase 6): without lang - language does not change matching."""
         data = {k: v for k, v in self.to_dict().items() if k != "lang"}
         return json.dumps(data, ensure_ascii=False, sort_keys=True)
 
     def to_query(self) -> dict[str, str]:
-        """Обратный маппинг в query-строку /app: budget_kzt→budget, duration_h→duration."""
+        """Reverse mapping to the /app query: budget_kzt->budget, duration_h->duration.
+        Free-text wishes are NEVER put into the URL."""
         q = {"city": self.city, "date": self.date, "event_type": self.event_type,
              "category": self.category, "budget": str(self.budget_kzt)}
         if self.duration_h is not None:
             q["duration"] = str(self.duration_h)
         if self.language:
             q["language"] = self.language
-        if self.wishes:
-            q["wishes"] = self.wishes
         return q
 
 
@@ -87,7 +90,7 @@ class Card:
     city: str
     price_from_kzt: int
     badges: list[str]                   # synthetic|price_imputed|city_imputed|price_equals_budget
-    explanation: str                    # 1–2 предложения
+    explanation: str                    # 1-2 sentences
     atoms: list[Atom]
     score: float
     score_breakdown: dict[str, float]
@@ -100,7 +103,7 @@ class Card:
 class Rejection:
     id: str
     name: str
-    reasons: list[str]                  # ReasonCode в порядке воронки; reasons[0] — primary
+    reasons: list[str]                  # ReasonCode in funnel order; reasons[0] is primary
     details: dict[str, str]
 
     @property
