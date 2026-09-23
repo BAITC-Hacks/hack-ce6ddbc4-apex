@@ -206,14 +206,14 @@ def test_referenced_images_exist(client, path):
 # ---- /app guest summary ----
 
 def test_app_without_conditions_invites_to_the_form(client):
-    html = client.get("/app").text
+    html = client.get("/app/brief").text
     assert "Задайте условия события" in html
     assert 'href="/#brief"' in html
     assert "Условия готовы" not in html
 
 
 def test_app_ready_summary_without_fake_results(client):
-    response = client.get(f"/app?{READY}")
+    response = client.get(f"/app/brief?{READY}")
     html = response.text
     assert response.context["brief"].state == "ready"
     assert "Условия готовы" in html and "Сейчас можно посмотреть пример подбора." in html
@@ -225,7 +225,7 @@ def test_app_ready_summary_without_fake_results(client):
 
 
 def test_app_edit_links_carry_all_five_conditions(client):
-    response = client.get(f"/app?{READY}")
+    response = client.get(f"/app/brief?{READY}")
     for name in ("city", "date", "event_type", "category", "budget"):
         link = response.context["edit_links"][name]
         parts = urlsplit(link)
@@ -236,7 +236,7 @@ def test_app_edit_links_carry_all_five_conditions(client):
 
 
 def test_app_partial_link_names_missing_conditions_without_red_errors(client):
-    response = client.get("/app?city=Алматы&category=Ведущий")
+    response = client.get("/app/brief?city=Алматы&category=Ведущий")
     html = response.text
     assert response.context["brief"].state == "incomplete"
     assert "Не хватает условий" in html and "Дополнить условия" in html
@@ -246,7 +246,7 @@ def test_app_partial_link_names_missing_conditions_without_red_errors(client):
 
 
 def test_app_invalid_link_is_not_a_success(client):
-    response = client.get("/app?city=Москва&date=2026-02-30&event_type=свадьба&category=Ведущий&budget=-1")
+    response = client.get("/app/brief?city=Москва&date=2026-02-30&event_type=свадьба&category=Ведущий&budget=-1")
     html = response.text
     assert response.status_code == 200
     assert response.context["brief"].state == "invalid"
@@ -257,14 +257,14 @@ def test_app_invalid_link_is_not_a_success(client):
 
 
 def test_app_zero_coverage_is_information_not_error(client):
-    response = client.get("/app?city=Астана&date=2026-11-05&event_type=той&category=Декоратор&budget=300000")
+    response = client.get("/app/brief?city=Астана&date=2026-11-05&event_type=той&category=Декоратор&budget=300000")
     assert response.context["brief"].state == "ready"
     assert "В каталоге нет этой услуги в выбранной локации" in response.text
 
 
 def test_app_escapes_values_and_drops_unknown_parameters(client):
     payload = '<script>alert("x")</script>'
-    response = client.get("/app", params={"budget": payload, "category": payload, "evil": "marker-9f2"})
+    response = client.get("/app/brief", params={"budget": payload, "category": payload, "evil": "marker-9f2"})
     html = response.text
     assert payload not in html
     assert "&lt;script&gt;" in html
@@ -273,7 +273,7 @@ def test_app_escapes_values_and_drops_unknown_parameters(client):
 
 
 def test_app_repeated_parameter_is_a_field_error(client):
-    response = client.get(f"/app?{READY}&city=Астана")
+    response = client.get(f"/app/brief?{READY}&city=Астана")
     assert response.context["brief"].state == "invalid"
     assert "Условие указано несколько раз" in response.text
 
@@ -297,9 +297,17 @@ def test_locales_share_keys_and_placeholders():
         for code in LOCALES
     }
     assert set(locales["kk"]) == set(locales["ru"]) == set(locales["en"])
+    # Kazakh quotes the singular format name where RU/EN use the plural; the engine passes both.
+    def kk_grammar(fields):
+        return sorted("event_type_pl" if name == "event_type" else name for name in fields)
     for key, value in locales["ru"].items():
         for code in ("kk", "en"):
-            assert _fields(locales[code][key]) == _fields(value), (code, key)
+            fields, source = _fields(locales[code][key]), _fields(value)
+            if code == "kk":
+                fields, source = kk_grammar(fields), kk_grammar(source)
+            # A translation may drop a value its grammar doesn't need (Kazakh has no gender) but
+            # never use one the engine doesn't pass: that would print a raw {placeholder}.
+            assert set(fields) <= set(source), (code, key)
             assert locales[code][key].strip(), (code, key)
 
 
@@ -327,7 +335,7 @@ def test_profile_count_is_not_repeated_in_the_limits_block(client):
 
 
 def test_request_edit_links_sit_inside_the_definition(client):
-    html = client.get(f"/app?{READY}").text
+    html = client.get(f"/app/brief?{READY}").text
     rows = re.findall(r'<div class="tl-request-row[^"]*">(.*?)</div>\s*(?=<div class="tl-request-row|</dl>)', html, re.S)
     assert len(rows) == 5
     for row in rows:

@@ -427,7 +427,9 @@ class _Url:
 
 class _Request:
     def __init__(self, path, query=""):
+        from starlette.datastructures import QueryParams
         self.url = _Url(path, query)
+        self.query_params = QueryParams(query)
 
 
 def render_banner(user, path="/app", query=""):

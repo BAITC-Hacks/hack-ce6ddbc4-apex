@@ -11,6 +11,8 @@ from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
 from .brief import FIELDS
+from matcher.scoring import WEIGHTS
+
 from .config import settings
 from .db import get_user_by_id
 from .i18n import HTML_LANG, SUPPORTED, data_label, get_lang, translate
@@ -72,6 +74,8 @@ def language_url(request: Request, code: str) -> str:
     ])
     target = request.url.path + (f"?{query}" if query else "")
     return f"/lang/{code}?" + urlencode({"next": target})
+
+templates.env.globals["SCORE_WEIGHTS"] = WEIGHTS   # фаза 5: раскрывашка балла в карточке
 
 
 def ensure_csrf(request: Request) -> str:

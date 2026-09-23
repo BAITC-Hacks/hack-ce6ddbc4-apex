@@ -1,7 +1,12 @@
 {#- Phase 3: shown on /app to guests. Phase 4's app/search.html includes it with `ignore missing`. -#}
 {% from 'partials/icons.html' import icon %}
 {% if not user %}
-{%- set here = request.url.path ~ ('?' ~ request.url.query if request.url.query else '') -%}
+{#- Only the structured search fields go into the link; wishes never appear in a URL. -#}
+{%- set pairs = [] -%}
+{%- for key in ('city', 'date', 'event_type', 'category', 'budget', 'duration', 'language', 'demo') if request.query_params.get(key) -%}
+  {%- set _ = pairs.append((key, request.query_params.get(key))) -%}
+{%- endfor -%}
+{%- set here = request.url.path ~ ('?' ~ (pairs | urlencode) if pairs else '') -%}
 <div class="tl-container flash-wrap">
   <p class="flash flash--info guest-banner">{{ icon('info') }}<span>{{ t('guest.banner.text') }}
     <a href="/login?next={{ here | urlencode }}" style="font-weight: 500; text-decoration: underline; text-underline-offset: 3px">{{ t('guest.banner.login') }}</a></span></p>
