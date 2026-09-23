@@ -56,6 +56,7 @@ def landing(request: Request):
         stats=catalog.stats(),
         categories=catalog.category_rows(),
         example_cards=_example_cards(catalog),
+        meta=catalog.meta(),
     )
 
 
@@ -132,7 +133,7 @@ def switch_lang(code: str, request: Request):
 
 @router.get("/app", response_class=HTMLResponse, include_in_schema=False)
 def app_placeholder(request: Request):
-    return render(request, "app/placeholder.html", placeholder_kind="search")
+    return render(request, "app/placeholder.html", placeholder_kind="search", meta=request.app.state.catalog.meta())
 
 
 @router.get("/login", response_class=HTMLResponse, include_in_schema=False)

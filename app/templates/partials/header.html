@@ -1,25 +1,27 @@
-<header class="site-header">
-  <div class="container site-header__inner">
-    <a class="logo" href="/" aria-label="Tandau">
-      <span class="logo__mark" aria-hidden="true">◆</span><span class="logo__text">Tandau</span>
-    </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="visually-hidden">{{ t('nav.menu') }}</span>☰
-    </button>
-    <nav id="site-nav" class="site-nav" aria-label="{{ t('nav.menu') }}">
-      <a href="/app" class="site-nav__link {% if path.startswith('/app') %}is-active{% endif %}">{{ t('nav.search') }}</a>
-      <a href="/#how" class="site-nav__link">{{ t('nav.how') }}</a>
-      {% include "partials/lang_switch.html" %}
-      {% if user %}
-        <a href="/account/history" class="btn btn--ghost">{{ t('nav.account') }}</a>
-        <form method="post" action="/logout" class="inline-form">
-          <input type="hidden" name="csrf" value="{{ csrf }}">
-          <button class="btn btn--ghost" type="submit">{{ t('nav.logout') }}</button>
-        </form>
-      {% else %}
-        <a href="/login" class="btn btn--ghost">{{ t('nav.login') }}</a>
-        <a href="/register" class="btn btn--primary">{{ t('nav.register') }}</a>
-      {% endif %}
+<header class="tl-header">
+  <div class="tl-container tl-header-inner">
+    <a class="tl-wordmark" href="/" aria-label="Tandau">{{ wordmark() }}</a>
+    <details class="tl-mobile-language">
+      <summary aria-label="{{ t('nav.language') }}: {{ {'ru':'Русский','kk':'Қазақша','en':'English'}[lang] }}">{{ {'ru':'RU','kk':'ҚАЗ','en':'EN'}[lang] }} <span aria-hidden="true">⌄</span></summary>
+      {% include 'partials/lang_switch.html' %}
+    </details>
+    <button class="tl-menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="{{ t('nav.menu') }}" data-open-label="{{ t('nav.menu') }}" data-close-label="{{ t('nav.close_menu') }}"><span></span><span></span></button>
+    <nav id="site-nav" class="tl-site-nav" aria-label="{{ t('nav.menu') }}">
+      <div class="tl-desktop-nav">
+        <a href="/#how">{{ t('nav.how') }}</a>
+        <a href="/#categories">{{ t('nav.categories') }}</a>
+        <a href="/#workspace">{{ t('nav.example') }}</a>
+      </div>
+      <div class="tl-header-actions">
+        {% include 'partials/lang_switch.html' %}
+        {% if user %}
+          <a class="tl-header-login" href="/account/history">{{ t('nav.account') }}</a>
+          <form action="/logout" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="tl-button tl-button-small" type="submit">{{ t('nav.logout') }}</button></form>
+        {% else %}
+          <a class="tl-header-login" href="/login"{% if path == '/login' %} aria-current="page"{% endif %}>{{ t('nav.login') }}</a>
+          <a class="tl-button tl-button-small" href="/register"{% if path == '/register' %} aria-current="page"{% endif %}>{{ t('nav.register') }} {{ icon('arrow') }}</a>
+        {% endif %}
+      </div>
     </nav>
   </div>
 </header>

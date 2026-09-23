@@ -1,0 +1,14 @@
+<article class="tl-result" data-profile="{{ c.id }}">
+  <div class="tl-card-top"><span class="tl-profile-number">{{ t('card.option', n='%02d'|format(card_number)) }}</span><button class="tl-save" type="button" aria-pressed="false" aria-label="{{ t('card.save', name=c.name) }}" data-save-label="{{ t('card.save', name=c.name) }}" data-remove-label="{{ t('card.remove', name=c.name) }}">{{ icon('bookmark') }}</button></div>
+  <div class="tl-profile"><div class="tl-profile-initial" aria-hidden="true">{{ c.name[0] }}</div><h4>{{ c.name }}</h4><p>{{ label('category', c.category) }} · {{ label('city', c.city) }}</p></div>
+  <div class="tl-card-price"><span>{{ t('card.starting_price') }}</span><strong>{{ c.price|kzt }}</strong><div class="tl-price-track" role="img" aria-label="{{ t('card.budget_share', n=(c.price / 10000)|round|int) }}"><span style="width:{{ [c.price / 10000, 100]|min }}%"></span></div></div>
+  <div class="tl-budget-margin"><span>{{ t('card.headroom' if c.price < 1000000 else 'card.budget_limit') }}</span><strong>{{ (1000000-c.price)|kzt if c.price < 1000000 else t('card.budget_warning') }}</strong></div>
+  {% if c.badges %}<div class="tl-card-flags">{% for b in c.badges %}<span class="badge badge--{{ b }}">{{ icon('info') }}{{ t('badge.' ~ b) }}</span>{% endfor %}</div>{% endif %}
+  <dl class="tl-card-facts">
+    <div><dt>{{ t('card.availability') }}</dt><dd>{{ t('card.demo_available' if c.demo_date_available else 'card.demo_busy') }}</dd></div>
+    <div><dt>{{ t('card.duration') }}</dt><dd>{{ t('card.hours', n=c.hours) }}</dd></div>
+    <div><dt>{{ t('card.languages') }}</dt><dd>{% for language in c.languages %}{{ label('language', language) }}{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>
+  </dl>
+  <details class="tl-card-reason" open><summary>{{ t('card.why') }}<span aria-hidden="true">+</span></summary><p>{{ t(c.text_key) }}</p><p class="tl-evidence-source">{{ t('card.source', id=c.id) }}</p></details>
+  <div class="tl-card-footer">{{ t('card.price_note') }}</div>
+</article>

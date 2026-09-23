@@ -1,6 +1,10 @@
-<footer class="site-footer">
-  <div class="container site-footer__inner">
-    <p>{{ t('footer.text') }}</p>
-    <p><a href="/docs">{{ t('footer.api') }}</a> · <a href="/healthz">healthz</a></p>
+<footer class="tl-footer">
+  <div class="tl-container">
+    <div class="tl-footer-top">
+      <a class="tl-wordmark" href="/" aria-label="Tandau">{{ wordmark() }}</a>
+      <p>{{ t('footer.tagline') }}</p>
+      <nav aria-label="{{ t('nav.footer') }}"><a href="/#how">{{ t('nav.how') }}</a><a href="/#categories">{{ t('nav.categories') }}</a><a href="/#faq">{{ t('nav.questions') }}</a><a href="/designbook">{{ t('nav.designbook') }}</a></nav>
+    </div>
+    <div class="tl-footer-bottom"><span>{{ t('footer.text') }}</span><a href="/docs">{{ t('footer.api') }}</a><a href="#main">{{ t('footer.top') }} ↑</a></div>
   </div>
 </footer>
