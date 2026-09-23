@@ -268,7 +268,3 @@ def guest_request(request: Request):
         storage_key=STORAGE_KEY,
     )
 
-
-@router.get("/login", response_class=HTMLResponse, include_in_schema=False)
-def auth_placeholder(request: Request):
-    return render(request, "app/placeholder.html", placeholder_kind="auth")

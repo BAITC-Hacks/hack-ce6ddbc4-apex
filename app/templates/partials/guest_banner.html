@@ -1,0 +1,9 @@
+{#- Phase 3: shown on /app to guests. Phase 4's app/search.html includes it with `ignore missing`. -#}
+{% from 'partials/icons.html' import icon %}
+{% if not user %}
+{%- set here = request.url.path ~ ('?' ~ request.url.query if request.url.query else '') -%}
+<div class="tl-container flash-wrap">
+  <p class="flash flash--info guest-banner">{{ icon('info') }}<span>{{ t('guest.banner.text') }}
+    <a href="/login?next={{ here | urlencode }}" style="font-weight: 500; text-decoration: underline; text-underline-offset: 3px">{{ t('guest.banner.login') }}</a></span></p>
+</div>
+{% endif %}

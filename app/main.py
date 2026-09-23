@@ -9,7 +9,7 @@ from matcher.data import load_catalog
 from .config import settings
 from .db import init_db, seed_demo_user
 from .i18n import load_locales
-from .routes import api, auth, pages
+from .routes import api, auth, login, pages
 from .web import resolve_user
 
 
@@ -38,6 +38,7 @@ def create_app() -> FastAPI:
     application.include_router(pages.router)
     application.include_router(api.router)
     application.include_router(auth.router)
+    application.include_router(login.router)
     return application
 
 
