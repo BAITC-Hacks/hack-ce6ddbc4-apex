@@ -10,11 +10,12 @@
   <link rel="preload" href="/static/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/static/css/app.css">
   <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
 </head>
 <body>
   <a class="tl-skip" href="#main">{{ t('common.skip_to_content') }}</a>
   {% include 'partials/header.html' %}
-  <main id="main" tabindex="-1">{% block content %}{% endblock %}</main>
+  <main id="main" tabindex="-1">{% include 'partials/flash.html' %}{% block content %}{% endblock %}</main>
   {% include 'partials/footer.html' %}
   <script src="/static/js/app.js" defer></script>
 </body>
