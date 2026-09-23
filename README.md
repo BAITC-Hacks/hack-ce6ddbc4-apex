@@ -1,5 +1,5 @@
-# Tandau — подбор event-подрядчиков с объяснениями
-
+# Tandau (https://tandau-jade.vercel.app/) — подбор event-подрядчиков с объяснениями
+https://tandau-jade.vercel.app/
 > Прототип для HackAlem AI, трек 06 «Креативные индустрии», кейс Firebird «Умный подбор подрядчиков».
 
 Команда **apex** · [репозиторий платформы](https://github.com/BAITC-Hacks/hack-ce6ddbc4-apex).
