@@ -75,6 +75,16 @@ def _dummy_hash() -> str:
     return hash_password(secrets.token_urlsafe(16))
 
 
+def _encodable(value: str) -> bool:
+    """False for a lone surrogate, which only a crafted request can carry (for example multipart
+    with charset=unicode_escape). sqlite, scrypt and the response encoder would all raise on it."""
+    try:
+        value.encode("utf-8")
+    except UnicodeEncodeError:
+        return False
+    return True
+
+
 def _render_login(request: Request, *, next_path: str, email: str = "", error: str | None = None,
                   error_params: dict | None = None, status_code: int = 200):
     return render(
@@ -108,13 +118,16 @@ def login(
     next: str = Form(""),
 ):
     target = safe_next(next)
-    email = normalize_email(email)[:MAX_EMAIL_LENGTH]
+    malformed = not (_encodable(email) and _encodable(password))
+    email = "" if malformed else normalize_email(email)[:MAX_EMAIL_LENGTH]
     try:
-        require_csrf(request, csrf)
+        require_csrf(request, csrf if _encodable(csrf) else "")
     except HTTPException:
         # A tab opened before another sign-in holds an old token: ask to resend, don't 403 as JSON.
         return _render_login(request, next_path=target, email=email,
                              error="auth.login.error_expired", status_code=403)
+    if malformed:
+        return _render_login(request, next_path=target, error="auth.login.error_invalid", status_code=400)
     if not email or not password:
         return _render_login(request, next_path=target, email=email,
                              error="auth.login.error_missing", status_code=400)
@@ -147,7 +160,7 @@ def login(
 @router.post("/logout", include_in_schema=False)
 def logout(request: Request, csrf: str = Form("")):
     try:
-        require_csrf(request, csrf)
+        require_csrf(request, csrf if _encodable(csrf) else "")
     except HTTPException:
         if resolve_user(request):
             # Stale form: stay signed in and say so rather than pretend the sign-out worked.

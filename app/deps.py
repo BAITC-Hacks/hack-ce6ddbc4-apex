@@ -36,7 +36,7 @@ def _kept_query(path: str, query: str) -> str:
     pairs = [
         (key, first[key]) for key in allowed
         if key in first and len(first[key]) <= MAX_QUERY_VALUE
-        and not any(ord(char) < 32 or ord(char) == 127 for char in first[key])
+        and not any(ord(char) < 32 or ord(char) == 127 or 0xD800 <= ord(char) <= 0xDFFF for char in first[key])
     ]
     return urlencode(pairs, quote_via=quote)
 

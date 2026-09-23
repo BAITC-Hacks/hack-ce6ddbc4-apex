@@ -77,10 +77,10 @@ def test_demo_login_redirects_to_app_and_starts_session(guest):
 
 def test_header_switches_to_account_actions_after_login(guest):
     log_in(guest)
-    html = guest.get("/").text
-    assert 'action="/logout"' in html
-    assert 'class="tl-header-login" href="/account/history"' in html
-    assert 'class="tl-header-login" href="/login"' not in html
+    header = guest.get("/").text.split("<header", 1)[1].split("</header>", 1)[0]
+    assert 'action="/logout"' in header
+    assert 'href="/account/history"' in header
+    assert 'href="/login"' not in header
 
 
 def test_email_is_matched_case_and_space_insensitively(guest):
@@ -158,6 +158,46 @@ def test_oversized_password_is_rejected_without_hashing(guest, monkeypatch):
     response = log_in(guest, password="x" * 5000)
     assert response.status_code == 400
     assert calls == []
+
+
+def _crafted_multipart(fields):
+    """Starlette decodes form fields with the request's charset: unicode_escape turns the
+    six characters \\ud800 into a lone surrogate, which no browser can send."""
+    boundary = "tandau-boundary"
+    body = "".join(
+        f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'
+        for key, value in fields.items()
+    ) + f"--{boundary}--\r\n"
+    return {"content": body.encode("latin-1"),
+            "headers": {"content-type": f"multipart/form-data; boundary={boundary}; charset=unicode_escape"}}
+
+
+@pytest.mark.parametrize("fields, status", [
+    ({"email": r"\ud800", "password": "x"}, 400),
+    ({"email": DEMO_EMAIL, "password": r"\ud800"}, 400),
+    ({"email": r"\ud800", "password": "x", "csrf": "forged"}, 403),
+    ({"email": DEMO_EMAIL, "password": DEMO_PASSWORD, "csrf": r"\ud800"}, 403),
+])
+def test_lone_surrogates_in_login_form_are_rejected_not_500(guest, fields, status):
+    fields = {"csrf": login_page(guest).context["csrf"], **fields}
+    response = guest.post("/login", follow_redirects=False, **_crafted_multipart(fields))
+    assert response.status_code == status
+    assert signed_in_user(guest) is None
+
+
+def test_lone_surrogate_in_next_is_dropped(guest):
+    fields = {"csrf": login_page(guest).context["csrf"], "email": DEMO_EMAIL, "password": DEMO_PASSWORD,
+              "next": r"/app?city=\ud800&date=2026-10-17"}
+    response = guest.post("/login", follow_redirects=False, **_crafted_multipart(fields))
+    assert response.status_code == 303
+    assert response.headers["location"] == "/app?date=2026-10-17"
+
+
+def test_lone_surrogate_csrf_on_logout_keeps_session(guest):
+    log_in(guest)
+    response = guest.post("/logout", follow_redirects=False, **_crafted_multipart({"csrf": r"\ud800"}))
+    assert response.status_code == 303
+    assert signed_in_user(guest) is not None
 
 
 @pytest.mark.parametrize("token", ["", "forged-token", "токен"])
