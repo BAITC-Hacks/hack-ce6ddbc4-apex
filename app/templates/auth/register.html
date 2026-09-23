@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
+{% block title %}{{ t('auth.register.title') }} — Tandau{% endblock %}
+{% block content %}
+{#- aria(): aria-invalid + aria-describedby (hint and error) + focus on the first invalid field -#}
+{% macro aria(field, hint=true) -%}
+  {%- set err = errors.get(field) -%}
+  {%- set ids = ([field ~ '-hint'] if hint else []) + ([field ~ '-error'] if err else []) -%}
+  {%- if err %} aria-invalid="true"{% endif -%}
+  {%- if ids %} aria-describedby="{{ ids | join(' ') }}"{% endif -%}
+  {%- if field == first_error %} autofocus{% endif -%}
+{%- endmacro %}
+{% macro error(field) -%}
+  {%- set err = errors.get(field) -%}
+  {%- if err %}<p class="field__error" id="{{ field }}-error">{{ t(err.key, **err.params) }}</p>{% endif -%}
+{%- endmacro %}
+<section class="tl-container account-preview auth-layout" aria-labelledby="register-title">
+  <aside class="account-story">
+    <p class="tl-eyebrow">{{ t('auth.register.kicker') }}</p>
+    <h2>{{ t('auth.register.story_title') }}</h2>
+    <p class="account-story-description">{{ t('auth.register.story_text') }}</p>
+    <ul class="account-story-features">
+      <li>{{ icon('bookmark') }}<span>{{ t('auth.register.story_saved') }}</span></li>
+      <li>{{ icon('clock') }}<span>{{ t('auth.register.story_history') }}</span></li>
+    </ul>
+  </aside>
+  <div class="account-panel auth-panel">
+    <div class="auth-panel-body">
+      <h1 id="register-title">{{ t('auth.register.title') }}</h1>
+      <p class="auth-lead">{{ t('auth.register.subtitle') }}</p>
+      <p class="auth-note">{{ icon('info') }}<span>{{ t('auth.register.guest_note') }} <a href="/app">{{ t('auth.register.guest_link') }}</a></span></p>
+      {% if errors %}
+      <div class="auth-errors" role="alert">
+        <p>{{ icon('info') }}<strong>{{ t('auth.register.errors_summary') }}</strong></p>
+        <ul>
+          {% for f in fields if errors.get(f) %}
+          <li><a href="#{{ f }}">{{ t('auth.register.' ~ f) }}: {{ t(errors[f].key, **errors[f].params) }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <form method="post" action="/register" class="auth-form" novalidate data-busy-label="{{ t('auth.register.submitting') }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <div class="auth-field{% if errors.get('name') %} is-invalid{% endif %}">
+          <label for="name">{{ t('auth.register.name') }}</label>
+          <input class="field__control" id="name" name="name" type="text" value="{{ form.name }}" autocomplete="name"
+                 required maxlength="60"{{ aria('name') }}>
+          <p class="field-help" id="name-hint">{{ t('auth.register.name_hint') }}</p>
+          {{ error('name') }}
+        </div>
+        <div class="auth-field{% if errors.get('email') %} is-invalid{% endif %}">
+          <label for="email">{{ t('auth.register.email') }}</label>
+          <input class="field__control" id="email" name="email" type="email" value="{{ form.email }}" autocomplete="email"
+                 inputmode="email" autocapitalize="none" spellcheck="false" required maxlength="254"{{ aria('email') }}>
+          <p class="field-help" id="email-hint">{{ t('auth.register.email_hint') }}</p>
+          {{ error('email') }}
+        </div>
+        <div class="auth-field{% if errors.get('password') %} is-invalid{% endif %}">
+          <label for="password">{{ t('auth.register.password') }}</label>
+          <div class="auth-password">
+            <input class="field__control" id="password" name="password" type="password" autocomplete="new-password"
+                   required minlength="8" maxlength="128"{{ aria('password') }}>
+            <button class="auth-password-toggle" type="button" aria-controls="password password_confirm" aria-pressed="false"
+                    aria-label="{{ t('auth.register.show_password') }}" data-password-toggle hidden>{{ icon('eye') }}</button>
+          </div>
+          <p class="field-help" id="password-hint">{{ t('auth.register.password_hint') }}</p>
+          {{ error('password') }}
+        </div>
+        <div class="auth-field{% if errors.get('password_confirm') %} is-invalid{% endif %}">
+          <label for="password_confirm">{{ t('auth.register.password_confirm') }}</label>
+          <input class="field__control" id="password_confirm" name="password_confirm" type="password" autocomplete="new-password"
+                 required maxlength="128"{{ aria('password_confirm', hint=false) }}>
+          {{ error('password_confirm') }}
+        </div>
+        <div class="auth-field{% if errors.get('preferred_lang') %} is-invalid{% endif %}">
+          <label for="preferred_lang">{{ t('auth.register.preferred_lang') }}</label>
+          <select class="field__control" id="preferred_lang" name="preferred_lang"{{ aria('preferred_lang', hint=false) }}>
+            {% for code, title in lang_options %}
+            <option value="{{ code }}" lang="{{ code }}"{% if form.preferred_lang == code %} selected{% endif %}>{{ title }}</option>
+            {% endfor %}
+          </select>
+          {{ error('preferred_lang') }}
+        </div>
+        <div class="auth-field{% if errors.get('preferred_city') %} is-invalid{% endif %}">
+          <label for="preferred_city">{{ t('auth.register.preferred_city') }}
+            <span class="auth-optional">({{ t('auth.register.optional') }})</span></label>
+          <select class="field__control" id="preferred_city" name="preferred_city"{{ aria('preferred_city') }}>
+            <option value="">{{ t('auth.register.city_none') }}</option>
+            {% for city in cities %}
+            <option value="{{ city }}"{% if form.preferred_city == city %} selected{% endif %}>{{ label('city', city) }}</option>
+            {% endfor %}
+          </select>
+          <p class="field-help" id="preferred_city-hint">{{ t('auth.register.preferred_city_hint') }}</p>
+          {{ error('preferred_city') }}
+        </div>
+        <button class="tl-button auth-submit" type="submit">{{ t('auth.register.submit') }}{{ icon('arrow') }}</button>
+      </form>
+      <div class="auth-foot">
+        <p>{{ t('auth.register.have_account') }} <a href="/login">{{ t('auth.nav.login') }}</a></p>
+        <p>{{ t('auth.register.demo_hint') }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="/static/js/auth.js" defer></script>
+{% endblock %}

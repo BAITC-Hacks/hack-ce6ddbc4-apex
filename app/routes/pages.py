@@ -137,6 +137,5 @@ def app_placeholder(request: Request):
 
 
 @router.get("/login", response_class=HTMLResponse, include_in_schema=False)
-@router.get("/register", response_class=HTMLResponse, include_in_schema=False)
 def auth_placeholder(request: Request):
     return render(request, "app/placeholder.html", placeholder_kind="auth")
