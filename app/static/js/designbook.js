@@ -10,6 +10,11 @@
     try { await navigator.clipboard.writeText(button.dataset.copy); announce(`Скопировано: ${button.dataset.copy}`); }
     catch { announce(`Код цвета: ${button.dataset.copy}. Выделите и скопируйте его вручную.`); }
   }));
+  document.querySelectorAll('[data-copy-prompt]').forEach(button => button.addEventListener('click', async () => {
+    const prompt = document.getElementById(button.dataset.copyPrompt);
+    try { await navigator.clipboard.writeText(prompt.textContent); announce('Промпт скопирован. Используйте указанное имя файла при экспорте.'); }
+    catch { announce('Выделите раскрытый промпт и скопируйте его вручную.'); }
+  }));
   document.querySelectorAll('[data-favourite]').forEach(button => {
     const initialName = button.getAttribute('aria-label');
     button.addEventListener('click', () => { const selected = button.getAttribute('aria-pressed') !== 'true'; button.setAttribute('aria-pressed', String(selected)); button.textContent = selected ? '♥' : '♡'; button.setAttribute('aria-label', selected ? initialName.replace('Добавить', 'Убрать').replace('в избранное', 'из избранного') : initialName); announce(selected ? 'Образец сохранён до перезагрузки страницы.' : 'Образец убран из избранного.'); });

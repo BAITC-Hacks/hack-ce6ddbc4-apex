@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from urllib.parse import parse_qsl, unquote, urlencode, urlsplit, urlunsplit
 
 from fastapi import APIRouter, Request
@@ -62,6 +64,10 @@ def designbook(request: Request):
         "designbook.html",
         stats=catalog.stats(),
         example_cards=_example_cards(catalog),
+        asset_briefs=json.loads(
+            (Path(__file__).resolve().parents[1] / "static/assets/tandau/asset-briefs.json")
+            .read_text(encoding="utf-8")
+        ),
         t=lambda key, **values: translate("ru", key, **values),
     )
 

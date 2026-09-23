@@ -1,0 +1,38 @@
+<section class="db-section" id="assets">
+<div class="db-section-head"><div><span class="db-kicker">02 / Tandau art direction</span><h2>Собственная коллекция.<br>Десять точных образов.</h2></div><p class="db-caption">Десять новых изображений ожидают генерации. Ниже — названия, схемы композиции и полные промпты. Схемы показывают замысел; готовые 3D-файлы будут подключены после передачи.</p></div>
+<div class="db-assets-intro"><div class="db-current-wave"><img src="/static/assets/tandau/fluid-card.png" alt="Выбранная синяя стеклянная волна Tandau" width="1536" height="1024" loading="lazy"><span>Уже подключено / выбранный вами фон</span></div><div class="db-assets-direction"><span class="db-kicker">Material direction</span><h3>Кобальтовое стекло.<br>Точные грани.</h3><p>Сатинированный алюминий, свет слева сверху, спокойная перспектива. Без надутых форм, декоративного шума и текста внутри изображений. Один предмет — одна роль в интерфейсе.</p></div></div>
+<div class="db-row db-component-space"><a class="db-btn db-btn--outline" href="/static/assets/tandau/asset-briefs.json" download>Скачать все 10 промптов ↗</a><p class="db-caption">Объекты: 1600 × 1600 PNG с прозрачностью.<br>Фон: 2560 × 1600 PNG. Цветовое пространство sRGB.</p></div>
+<div class="db-asset-grid">
+
+{% for asset in asset_briefs %}
+<article class="db-asset-brief" id="asset-{{ asset.id }}">
+{% if loop.index0 == 0 %}
+<div class="db-asset-art db-asset-art--wave"><img src="/static/assets/tandau/fluid-card.png" alt="Текущий фон как ориентир для новой волны" width="1536" height="1024" loading="lazy"><span>01 / ФОН</span><small>Текущий фон · ориентир для генерации</small></div>
+{% elif loop.index0 == 1 %}
+<div class="db-asset-art"><span>02 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="M46 38 100 20v88l-54 20Z" fill="#F7FAFF"/><path d="m93 44 54-18v88l-54 20Z" fill="#C8D7EF"/><path d="m138 36 54-18v88l-54 20Z" fill="#2B5FE3" stroke="#1643AF"/><path d="m138 36 7 4 54-18-7-4m7 4v88l-7-4"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 2 %}
+<div class="db-asset-art"><span>03 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m43 102 73-28 78 27-73 29Z" fill="#C4D3EB"/><path d="m43 102 0 9 78 29 73-30v-9M121 130v10"/><path d="M63 94V43l106-4v55M68 92V48l96-4v48"/><path d="m76 47 23-1v47l-23 8Zm64-3 23-1v48l-23 10Z" fill="#2B5FE3"/><path d="m63 43 11-5 106-4v54l-11 6"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 3 %}
+<div class="db-asset-art"><span>04 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m62 37 101-11 15 10v88L76 138l-14-12Z" fill="#C5D4ED"/><path d="m76 48 102-12M76 48v90M76 70l102-13M62 37l14 11"/><path d="m90 34 0-14m57 9V14" stroke-width="5"/><path d="m91 84 20-3v19l-20 3Zm34-5 20-3v19l-20 3Z" fill="#2B5FE3"/><path d="m91 115 20-3m14-1 20-3"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 4 %}
+<div class="db-asset-art"><span>05 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m48 46 128-11 17 12v76L66 136l-18-12Z" fill="#EAF1FD"/><path d="m66 59 127-12M66 59v77M48 46l18 13"/><path d="m79 72 100-10v44l-100 10Z" fill="#BBCFEB"/><path d="m140 78 26-3v29l-26 3Z" fill="#2B5FE3"/><path d="m81 97 37-4m-37 12 22-2"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 5 %}
+<div class="db-asset-art"><span>06 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m45 66 71-30 30 13-71 30ZM45 86l71-30 30 13-71 30ZM45 106l71-30 30 13-71 30Z" fill="#CCD9ED"/><path d="m116 37 64-7 9 54-64 9Z" fill="#92B9FF" fill-opacity=".45" stroke="#2B5FE3" stroke-width="6"/><path d="m172 91 23 22" stroke="#2B5FE3" stroke-width="8"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 6 %}
+<div class="db-asset-art"><span>07 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m82 27 65-10 19 12v106l-35-19-34 27-15-12Z" fill="#BCD0EE"/><path d="m97 40 69-11v106l-35-19-34 27Z" fill="#2B5FE3"/><path d="m82 27 15 13m0 0v103m20-84 30-5"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 7 %}
+<div class="db-asset-art"><span>08 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m49 39 139-15v83l-33 4v-56L80 64v57l-31 4Z" fill="#D5E0F1"/><path d="m49 125 16 12 31-4V76l74-8m18 39 15 12V36l-15-12"/><path d="m111 111 21-2v21l-21 2Z" fill="#2B5FE3"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 8 %}
+<div class="db-asset-art"><span>09 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m48 49 52-8 15 12 73-9v74L58 136l-10-13Z" fill="#C7D6EC"/><path d="m58 65 130-21M58 65v71M48 49l10 16"/><path d="m81 81 73-10v36l-73 10Z" fill="#2B5FE3"/><path d="m108 85 14-2v16l-14 2Z" stroke="white"/><path d="m109 86v-4c0-9 12-11 12-2v4" stroke="white"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% elif loop.index0 == 9 %}
+<div class="db-asset-art"><span>10 / 3D OBJECT</span><svg viewBox="0 0 240 160" fill="none" stroke="#667FA9" stroke-width="1.25" stroke-linejoin="miter" aria-hidden="true"><path d="m66 35 84-13 25 18v81l-83 14-26-20Z" fill="#B2CBF5"/><path d="m92 53 83-13v81l-83 14Z" fill="#2B5FE3"/><path d="m66 35 26 18m0 0v82"/><path d="m111 90 13 10 29-35" stroke="white" stroke-width="5"/></svg><small>Композиционный эскиз · не финальный 3D</small></div>
+{% endif %}
+<div class="db-asset-content">
+<div class="db-asset-title"><h3>{{ asset.name }}</h3><span>ОЖИДАЕТСЯ</span></div>
+<code>{{ asset.filename }}</code><p>{{ asset.description }}</p><p><strong>В продукте:</strong> {{ asset.placement }}</p>
+<div class="db-asset-meta"><span>{{ asset.width }} × {{ asset.height }}</span><span>{{ 'RGB / светлый фон' if loop.first else 'RGBA / прозрачность' }}</span><span>{{ asset.priority }}</span></div>
+<details><summary>Промпт для {{ asset.filename }}</summary><div class="db-asset-prompt" id="prompt-{{ asset.id }}" lang="en">{{ asset.prompt }}</div><button type="button" class="db-btn db-btn--secondary" data-copy-prompt="prompt-{{ asset.id }}">Скопировать промпт ↗</button></details>
+</div></article>
+{% endfor %}
+
+</div><div class="db-note">Начните с Choice stack, Match lens и Complete check: они задают общий материал коллекции. Новая волна — необязательная альтернатива; текущая остаётся выбранной. Иллюстрации не изображают реальных подрядчиков и не заменяют подписи действий.</div></section>
